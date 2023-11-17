@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /**
- * @file parse.h
+ * @file parser.h
  * @brief Header file for the nanoJSONc library.
  */
 
