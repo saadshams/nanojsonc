@@ -111,10 +111,10 @@ static void callback(const char *const key, const char *const value, const char 
     if (strncmp("data[children]", parentKey, strlen("data[children]")) == 0) {
         if (strcmp(key, "first") == 0) {
             struct Child *child = malloc(sizeof(struct Child));
-            *child = (struct Child){0};
+            // *child = (struct Child){0};
 
             child->name = malloc(sizeof(struct Name));
-            *child->name = (struct Name){0};
+            // *child->name = (struct Name){0};
 
             child->next = NULL;
             child->name->first = strdup(value);
