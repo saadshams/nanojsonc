@@ -171,41 +171,43 @@ void verify(struct Person *person) {
     assert(person->children->next->age == 14);
 }
 
-void person_free(struct Person **p) {
-    free((*p)->name->first);
-    free((*p)->name->last);
-    free((*p)->name);
-    (*p)->name = NULL;
+void person_free(struct Person **person) {
+    free((*person)->name->first);
+    free((*person)->name->last);
+    free((*person)->name);
+    (*person)->name = NULL;
 
-    free((*p)->phone);
+    free((*person)->phone);
 
     // hobbies
-    for (struct Hobby **cursor = &(*p)->hobbies; *cursor;) {
+    for (struct Hobby **cursor = &(*person)->hobbies; *cursor;) {
         struct Hobby *node = *cursor;
         *cursor = (*cursor)->next;
         free(node->name);
         free(node);
     }
-    (*p)->hobbies = NULL;
+    (*person)->hobbies = NULL;
 
     // address
-    free((*p)->address->street);
-    free((*p)->address->city);
-    free((*p)->address->state);
-    free((*p)->address->zip);
-    free((*p)->address);
-    (*p)->address = NULL;
+    free((*person)->address->street);
+    free((*person)->address->city);
+    free((*person)->address->state);
+    free((*person)->address->zip);
+    free((*person)->address);
+    (*person)->address = NULL;
 
     // children
-//    for (struct Child **cursor = &(*p)->children; *cursor;) {
-//        struct Child *node = *cursor;
-//        *cursor = (*cursor)->next;
-//        free(node->name->first);
-//        free(node->name->last);
-//        free(node->name);
-//        free(node);
-//    }
-//    (*p)->children = NULL;
+    for (struct Child **cursor = &(*person)->children; *cursor;) {
+        struct Child *node = *cursor;
+        *cursor = (*cursor)->next;
+        free(node->name->first);
+        free(node->name->last);
+        free(node->name);
+        free(node);
+    }
+    (*person)->children = NULL;
+
+    free(*person);
 }
 
 int main() {
