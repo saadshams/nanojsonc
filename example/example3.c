@@ -72,7 +72,10 @@ static void callback(const char *const key, const char *const value, const char 
     }
 
     if (strcmp(parentKey, "data[name]") == 0) {
-        if ((*person)->name == NULL) (*person)->name = malloc(sizeof(struct Name));
+        if ((*person)->name == NULL) {
+            (*person)->name = malloc(sizeof(struct Name));
+            *(*person)->name = (struct Name){0};
+        }
         if (strcmp(key, "first") == 0) (*person)->name->first = strdup(value);
         if (strcmp(key, "last") == 0) (*person)->name->last = strdup(value);
     }
@@ -89,6 +92,7 @@ static void callback(const char *const key, const char *const value, const char 
     // hobbies
     if (strcmp(parentKey, "data[hobbies]") == 0) {
         struct Hobby *hobby = malloc(sizeof(struct Hobby));
+        *hobby = (struct Hobby){0};
         hobby->name = strdup(value);
         hobby->next = NULL;
 
@@ -99,8 +103,10 @@ static void callback(const char *const key, const char *const value, const char 
 
     // address
     if (strcmp(parentKey, "data[address]") == 0) {
-        if ((*person)->address == NULL)
+        if ((*person)->address == NULL) {
             (*person)->address = malloc(sizeof(struct Address));
+            *(*person)->address = (struct Address){0};
+        }
         if (strcmp(key, "street") == 0) (*person)->address->street = strdup(value);
         if (strcmp(key, "city") == 0) (*person)->address->city = strdup(value);
         if (strcmp(key, "state") == 0) (*person)->address->state = strdup(value);
