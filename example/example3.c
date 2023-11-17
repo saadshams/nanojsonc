@@ -197,15 +197,15 @@ void person_free(struct Person **p) {
     (*p)->address = NULL;
 
     // children
-    for (struct Child **cursor = &(*p)->children; *cursor;) {
-        struct Child *node = *cursor;
-        *cursor = (*cursor)->next;
-        free(node->name->first);
-        free(node->name->last);
-        free(node->name);
-        free(node);
-    }
-    (*p)->children = NULL;
+//    for (struct Child **cursor = &(*p)->children; *cursor;) {
+//        struct Child *node = *cursor;
+//        *cursor = (*cursor)->next;
+//        free(node->name->first);
+//        free(node->name->last);
+//        free(node->name);
+//        free(node);
+//    }
+//    (*p)->children = NULL;
 }
 
 int main() {
