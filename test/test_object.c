@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int counter = 0;
 
-static void callback(const char *const key, const char *const value, const char *const parentKey) {
+static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
     counter++;
 }
 
@@ -50,7 +50,7 @@ static void testEmptyObject() {
     assert(counter == 0);
 }
 
-static void callback1(const char *const key, const char *const value, const char *const parentKey) {
+static void callback1(const char *const key, const char *const value, const char *const parentKey, void *object) {
     if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
     if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
     if (strcmp(key, "phone") == 0) { assert(strcmp(value, "") == 0); counter++; }
@@ -63,7 +63,7 @@ static void testStringProperty() {
     counter = 0;
 }
 
-static void callback2(const char *const key, const char *const value, const char *const parentKey) {
+static void callback2(const char *const key, const char *const value, const char *const parentKey, void *object) {
     if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
     if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
     if (strcmp(key, "age") == 0) { assert(strcmp(value, "15") == 0); counter++; }
@@ -76,7 +76,7 @@ static void testNumberProperty() {
     counter = 0;
 }
 
-static void callback3(const char *const key, const char *const value, const char *const parentKey) {
+static void callback3(const char *const key, const char *const value, const char *const parentKey, void *object) {
     if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
     if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
     if (strcmp(key, "isMarried") == 0) { assert(strcmp(value, "false") == 0); counter++; }
@@ -90,7 +90,7 @@ static void testBooleanProperty() {
     counter = 0;
 }
 
-static void callback4(const char *const key, const char *const value, const char *const parentKey) {
+static void callback4(const char *const key, const char *const value, const char *const parentKey, void *object) {
     if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
     if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
     if (strcmp(key, "phone") == 0) { assert(strcmp(value, "null") == 0); counter++; }
@@ -103,7 +103,7 @@ static void testNullValue() {
     counter = 0;
 }
 
-static void callback5(const char *const key, const char *const value, const char *const parentKey) {
+static void callback5(const char *const key, const char *const value, const char *const parentKey, void *object) {
     if (strcmp(parentKey, "") == 0) {
         if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
         if (strcmp(key, "age") == 0) { assert(strcmp(value, "15") == 0); counter++; }
@@ -122,7 +122,7 @@ static void testArrayProperty() {
     counter = 0;
 }
 
-static void callback6(const char *const key, const char *const value, const char *const parentKey) {
+static void callback6(const char *const key, const char *const value, const char *const parentKey, void *object) {
     if (strcmp(parentKey, "") == 0) {
         if (strcmp(key, "foo") == 0) { assert(strcmp(value, "bar") == 0); counter++; }
     }
