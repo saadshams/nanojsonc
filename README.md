@@ -29,18 +29,21 @@ data effectively.
 struct Person { 
     char *name; 
     int age; 
-} person;
+};
 
-void callback(const char *const key, const char *const value, const char *const parentKey) {
-    if (strcmp(key, "name") == 0) person.name = strdup(value);
-    if (strcmp(key, "age") == 0) person.age = atoi(value);
+static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+    struct Person **person = object;
+    if (*person == NULL) *person = malloc(sizeof(struct Person));
+    if (strcmp(key, "name") == 0) (*person)->name = strdup(value);
+    if (strcmp(key, "age") == 0) (*person)->age = atoi(value);
 }
 
 int main(void) {
     char *json = "{\"name\": \"John Doe\", \"age\": 25}";
     
-    nanojson_parse_object(json, callback, NULL);
-    printf("Name: %s, Age: %d", person.name, person.age); // Name: John Doe, Age: 25
+    struct Person *person = NULL;
+    nanojson_parse_object(json, callback, NULL, &person);
+    printf("Name: %s, Age: %d", person->name, person->age); // Name: John Doe, Age: 25
     
     return 0;
 }
@@ -53,25 +56,27 @@ struct Hobby {
     struct Hobby *next;
 };
 
-struct Hobby *hobbies = NULL;
-
-static void callback(const char *const key, const char *const value, const char *const parentKey) {
+static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+    struct Hobby **hobbies = object;
+    
     struct Hobby *hobby = malloc(sizeof(struct Hobby));
     hobby->name = strdup(value);
     hobby->next = NULL;
 
     struct Hobby **cursor;
-    for (cursor = &hobbies; *cursor; cursor = &(*cursor)->next);
+    for (cursor = hobbies; *cursor; cursor = &(*cursor)->next);
     
-    *cursor = hobby; // append
+    *cursor = hobby;
 }
 
 int main(void) {
     char *json = "[\"Reading\", \"Hiking\", \"Cooking\"]";
     
-    nanojson_parse_array(json, callback, NULL);
-    for (struct Hobby **start = &hobbies; *start; start = &(*start)->next)
-        printf("%s ", (*start)->name); // Reading Hiking Cooking 
+    struct Hobby *hobbies = NULL;
+    nanojson_parse_array(json, callback, "hobbies", &hobbies);
+
+    for (struct Hobby **cursor = &hobbies; *cursor; cursor = &(*cursor)->next)
+        printf("%s ", (*cursor)->name); // Reading Hiking Cooking 
     
     return 0;
 }

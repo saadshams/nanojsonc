@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <ctype.h>
 
-void nanojson_parse_object(const char *const json, void (*callback)(const char *const key, const char *const value, const char *const parentKey), const char *const parentKey) {
+void nanojson_parse_object(const char *const json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *const parentKey, void *object) {
     if (json == NULL) return;
     const char *start = json, *parent = (parentKey == NULL) ? "" : parentKey, *cursor = NULL;
 
@@ -86,7 +86,7 @@ void nanojson_parse_object(const char *const json, void (*callback)(const char *
             if (snprintf(subKey, KEY_SIZE, "%s[%s]", parent, key) < 0) // parentKey with childKey
                 perror("Formatted key exceeds buffer size");
 
-            nanojson_parse_object(value, callback, subKey);
+            nanojson_parse_object(value, callback, subKey, object);
         }
 
         // nested array
@@ -109,7 +109,7 @@ void nanojson_parse_object(const char *const json, void (*callback)(const char *
             if (snprintf(subKey, sizeof(subKey), "%s[%s]", parent, key) < 0) // parentKey with childKey
                 perror("Formatted key exceeds buffer size");
 
-            nanojson_parse_array(value, callback, subKey);
+            nanojson_parse_array(value, callback, subKey, object);
         }
 
         // parse values (string, number, boolean, null)
@@ -124,7 +124,7 @@ void nanojson_parse_object(const char *const json, void (*callback)(const char *
             strncpy(value, start, len);
             value[len] = '\0';
 
-            callback(key, value, parent);
+            callback(key, value, parent, object);
             cursor++;
         }
 
@@ -137,7 +137,7 @@ void nanojson_parse_object(const char *const json, void (*callback)(const char *
             memset(value, 0, KEY_SIZE);
             strncpy(value, start, len);
             value[len] = '\0';
-            callback(key, value, parent);
+            callback(key, value, parent, object);
         }
 
         if (*cursor == 't' || *cursor == 'f' || *cursor == 'n') { // boolean (true/false) or null
@@ -150,7 +150,7 @@ void nanojson_parse_object(const char *const json, void (*callback)(const char *
             strncpy(value, start, len);
             value[len] = '\0';
 
-            callback(key, value, parent);
+            callback(key, value, parent, object);
         }
 
         // skip whitespace after the value

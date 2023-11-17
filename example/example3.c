@@ -61,29 +61,29 @@ struct Person {
         int age;
         struct Child *next;
     } *children;
-} *person;
+};
 
-static void callback(const char *const key, const char *const value, const char *const parentKey) {
-    static struct Child *child;
+static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+    struct Person **person = object;
 
-    if (person == NULL) {
-        person = malloc(sizeof(struct Person));
-        memset(person, 0, sizeof(struct Person));
+    if (*person == NULL) {
+        *person = malloc(sizeof(struct Person));
+        **person = (struct Person){0}; // Initialize all members to 0
     }
 
     if (strcmp(parentKey, "data[name]") == 0) {
-        if (person->name == NULL) person->name = malloc(sizeof(struct Name));
-        if (strcmp(key, "first") == 0) person->name->first = strdup(value);
-        if (strcmp(key, "last") == 0) person->name->last = strdup(value);
+        if ((*person)->name == NULL) (*person)->name = malloc(sizeof(struct Name));
+        if (strcmp(key, "first") == 0) (*person)->name->first = strdup(value);
+        if (strcmp(key, "last") == 0) (*person)->name->last = strdup(value);
     }
 
     if (strcmp(parentKey, "data") == 0) {
-        if (strcmp(key, "age") == 0)person->age = atoi(value);
-        if (strcmp(key, "phone") == 0) person->phone = strdup(value);
+        if (strcmp(key, "age") == 0)(*person)->age = atoi(value);
+        if (strcmp(key, "phone") == 0) (*person)->phone = strdup(value);
         if (strcmp(key, "isStudent") == 0)
-            person->isStudent = (strcmp(value, "true") == 0) ? true : false;
+            (*person)->isStudent = (strcmp(value, "true") == 0) ? true : false;
         if (strcmp(key, "isEmployed") == 0)
-            person->isEmployed = (strcmp(value, "true") == 0) ? true : false;
+            (*person)->isEmployed = (strcmp(value, "true") == 0) ? true : false;
     }
 
     // hobbies
@@ -93,44 +93,50 @@ static void callback(const char *const key, const char *const value, const char 
         hobby->next = NULL;
 
         struct Hobby **cursor;
-        for (cursor = &person->hobbies; *cursor; cursor = &(*cursor)->next);
+        for (cursor = &(*person)->hobbies; *cursor; cursor = &(*cursor)->next);
         *cursor = hobby;
     }
 
     // address
     if (strcmp(parentKey, "data[address]") == 0) {
-        if (person->address == NULL)
-            person->address = malloc(sizeof(struct Address));
-        if (strcmp(key, "street") == 0) person->address->street = strdup(value);
-        if (strcmp(key, "city") == 0) person->address->city = strdup(value);
-        if (strcmp(key, "state") == 0) person->address->state = strdup(value);
-        if (strcmp(key, "zip") == 0) person->address->zip = strdup(value);
+        if ((*person)->address == NULL)
+            (*person)->address = malloc(sizeof(struct Address));
+        if (strcmp(key, "street") == 0) (*person)->address->street = strdup(value);
+        if (strcmp(key, "city") == 0) (*person)->address->city = strdup(value);
+        if (strcmp(key, "state") == 0) (*person)->address->state = strdup(value);
+        if (strcmp(key, "zip") == 0) (*person)->address->zip = strdup(value);
     }
 
     // children
     if (strncmp("data[children]", parentKey, strlen("data[children]")) == 0) {
-        if (child == NULL) {
-            child = malloc(sizeof(struct Child));
-            memset(child, 0, sizeof(struct Child));
-            struct Name *name = malloc(sizeof(struct Name));
-            memset(name, 0, sizeof(struct Name));
-            child->name = name;
+        if (strcmp(key, "first") == 0) {
+            struct Child *child = malloc(sizeof(struct Child));
+            *child = (struct Child){0};
+
+            child->name = malloc(sizeof(struct Name));
+            *child->name = (struct Name){0};
+
             child->next = NULL;
+            child->name->first = strdup(value);
 
             struct Child **cursor;
-            for (cursor = &person->children; *cursor; cursor = &(*cursor)->next);
+            for (cursor = &(*person)->children; *cursor; cursor = &(*cursor)->next);
             *cursor = child;
         }
-        if (strcmp(key, "first") == 0) child->name->first = strdup(value);
-        if (strcmp(key, "last") == 0) child->name->last = strdup(value);
+        if (strcmp(key, "last") == 0) {
+            struct Child **cursor;
+            for (cursor = &(*person)->children; (*cursor)->next != NULL; cursor = &(*cursor)->next);
+            (*cursor)->name->last = strdup(value);
+        }
         if (strcmp(key, "age") == 0) {
-            child->age = atoi(value);
-            child = NULL;
+            struct Child **cursor;
+            for (cursor = &(*person)->children; (*cursor)->next != NULL; cursor = &(*cursor)->next);
+            (*cursor)->age = atoi(value);
         }
     }
 }
 
-void verify() {
+void verify(struct Person *person) {
     assert(person);
     assert(strcmp(person->name->first, "John") == 0);
     assert(strcmp(person->name->last, "Doe") == 0);
@@ -168,13 +174,13 @@ void person_free(struct Person **p) {
     free((*p)->phone);
 
     // hobbies
-    for (struct Hobby **cursor = &person->hobbies; *cursor;) {
+    for (struct Hobby **cursor = &(*p)->hobbies; *cursor;) {
         struct Hobby *node = *cursor;
         *cursor = (*cursor)->next;
         free(node->name);
         free(node);
     }
-    person->hobbies = NULL;
+    (*p)->hobbies = NULL;
 
     // address
     free((*p)->address->street);
@@ -185,7 +191,7 @@ void person_free(struct Person **p) {
     (*p)->address = NULL;
 
     // children
-    for (struct Child **cursor = &person->children; *cursor;) {
+    for (struct Child **cursor = &(*p)->children; *cursor;) {
         struct Child *node = *cursor;
         *cursor = (*cursor)->next;
         free(node->name->first);
@@ -235,8 +241,9 @@ int main() {
     buffer[len] = '\0';
     fclose(file);
 
-    nanojson_parse_object(buffer, callback, "data");
-    verify();
+    struct Person *person = NULL;
+    nanojson_parse_object(buffer, callback, "data", &person);
+    verify(person);
 
     person_free(&person);
     free(buffer);

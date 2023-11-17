@@ -40,22 +40,24 @@ struct Hobby {
     struct Hobby *next;
 };
 
-struct Hobby *hobbies = NULL;
+static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+    struct Hobby **hobbies = object;
 
-static void callback(const char *const key, const char *const value, const char *const parentKey) {
     struct Hobby *hobby = malloc(sizeof(struct Hobby));
     hobby->name = strdup(value);
     hobby->next = NULL;
 
     struct Hobby **cursor;
-    for (cursor = &hobbies; *cursor; cursor = &(*cursor)->next);
+    for (cursor = hobbies; *cursor; cursor = &(*cursor)->next);
+
     *cursor = hobby;
 }
 
 int main(void) {
     char *json = "[\"Reading\", \"Hiking\", \"Cooking\"]";
 
-    nanojson_parse_array(json, callback, "hobbies");
+    struct Hobby *hobbies = NULL;
+    nanojson_parse_array(json, callback, "hobbies", &hobbies);
 
     for (struct Hobby **cursor = &hobbies; *cursor; cursor = &(*cursor)->next)
         printf("%s ", (*cursor)->name);

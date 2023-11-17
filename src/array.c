@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <ctype.h>
 
-void nanojson_parse_array(const char *const json, void (*callback)(const char *const key, const char *const value, const char *const parentKey), const char *const parentKey) {
+void nanojson_parse_array(const char *const json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *const parentKey, void *object) {
     if (json == NULL) return;
     const char *start = json, *cursor = NULL, *parent = parentKey == NULL ? "" : parentKey;
     int index = 0; // current index of the array
@@ -69,7 +69,7 @@ void nanojson_parse_array(const char *const json, void (*callback)(const char *c
             if (snprintf(subKey, sizeof(subKey), "%s[%d]", parent, index) < 0) // parentKey with subscript
                 perror("Formatted key exceeds buffer size");
 
-            nanojson_parse_object(value, callback, subKey);
+            nanojson_parse_object(value, callback, subKey, object);
             index++;
             cursor++;
         }
@@ -94,7 +94,7 @@ void nanojson_parse_array(const char *const json, void (*callback)(const char *c
             if (snprintf(subKey, sizeof(subKey), "%s[%d]", parent, index) < 0) // parentKey with subscript for the recursive call
                 perror("Formatted key exceeds buffer size");
 
-            nanojson_parse_array(value, callback, subKey);
+            nanojson_parse_array(value, callback, subKey, object);
             index++;
             cursor++;
         }
@@ -113,7 +113,7 @@ void nanojson_parse_array(const char *const json, void (*callback)(const char *c
             strncpy(value, start, len);
             value[len] = '\0';
 
-            callback(key, value, parent);
+            callback(key, value, parent, object);
             index++;
             cursor++;
         }
@@ -128,7 +128,7 @@ void nanojson_parse_array(const char *const json, void (*callback)(const char *c
             strncpy(value, start, len);
             value[len] = '\0';
 
-            callback(key, value, parent);
+            callback(key, value, parent, object);
             index++;
             cursor++;
         }
@@ -143,7 +143,7 @@ void nanojson_parse_array(const char *const json, void (*callback)(const char *c
             strncpy(value, start, len);
             value[len] = '\0';
 
-            callback(key, value, parent);
+            callback(key, value, parent, object);
             index++;
             cursor++;
         }

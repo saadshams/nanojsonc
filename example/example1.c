@@ -38,17 +38,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 struct Person {
     char *name;
     int age;
-} *person;
+};
 
-static void callback(const char *const key, const char *const value, const char *const parentKey) {
-    if (person == NULL) person = malloc(sizeof(struct Person));
-    if (strcmp(key, "name") == 0) person->name = strdup(value);
-    if (strcmp(key, "age") == 0) person->age = atoi(value);
+static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+    struct Person **person = object;
+    if (*person == NULL) {
+        *person = malloc(sizeof(struct Person));
+        **person = (struct Person){0};
+    }
+    if (strcmp(key, "name") == 0) (*person)->name = strdup(value);
+    if (strcmp(key, "age") == 0) (*person)->age = atoi(value);
 }
 
 int main(void) {
     char *json = "{\"name\": \"John Doe\", \"age\": 25}";
-    nanojson_parse_object(json, callback, NULL);
+
+    struct Person *person = NULL;
+    nanojson_parse_object(json, callback, NULL, &person);
 
     assert(strcmp(person->name, "John Doe") == 0);
     assert(person->age == 25);
