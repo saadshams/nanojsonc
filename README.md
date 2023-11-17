@@ -21,6 +21,11 @@ data effectively.
 - Simple API, Pure Functions, No side-effects
 - Parses deeply nested & mixed JSON objects and arrays (See [examples](https://github.com/saadshams/nanojsonc/tree/main/example))
 
+## Installation
+```commandline
+vcpkg install nanojsonc
+```
+
 ## Usage
 
 ### Parsing JSON Object
