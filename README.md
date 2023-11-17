@@ -42,7 +42,7 @@ int main(void) {
     char *json = "{\"name\": \"John Doe\", \"age\": 25}";
     
     struct Person *person = NULL;
-    nanojson_parse_object(json, callback, NULL, &person);
+    nanojsonc_parse_object(json, callback, NULL, &person);
     printf("Name: %s, Age: %d", person->name, person->age); // Name: John Doe, Age: 25
     
     return 0;
@@ -73,7 +73,7 @@ int main(void) {
     char *json = "[\"Reading\", \"Hiking\", \"Cooking\"]";
     
     struct Hobby *hobbies = NULL;
-    nanojson_parse_array(json, callback, "hobbies", &hobbies);
+    nanojsonc_parse_array(json, callback, "hobbies", &hobbies);
 
     for (struct Hobby **cursor = &hobbies; *cursor; cursor = &(*cursor)->next)
         printf("%s ", (*cursor)->name); // Reading Hiking Cooking 

@@ -57,7 +57,7 @@ int main(void) {
     char *json = "[\"Reading\", \"Hiking\", \"Cooking\"]";
 
     struct Hobby *hobbies = NULL;
-    nanojson_parse_array(json, callback, "hobbies", &hobbies);
+    nanojsonc_parse_array(json, callback, "hobbies", &hobbies);
 
     for (struct Hobby **cursor = &hobbies; *cursor; cursor = &(*cursor)->next)
         printf("%s ", (*cursor)->name);

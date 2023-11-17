@@ -52,7 +52,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @param parentKey   The key of the parent object or user's value. If it's NULL, an
  *                    empty string is used as the parent key.
  */
-void nanojson_parse_array(const char *json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *parentKey, void *object);
+void nanojsonc_parse_array(const char *json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *parentKey, void *object);
 
 /**
  * @brief Parses a JSON object and invokes a callback function for each key-value pair.
@@ -71,6 +71,6 @@ void nanojson_parse_array(const char *json, void (*callback)(const char *const k
  * @param parentKey   The key of the parent object or user's value. If it's NULL, an
  *                    empty string is used as the parent key.
  */
-void nanojson_parse_object(const char *json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *parentKey, void *object);
+void nanojsonc_parse_object(const char *json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *parentKey, void *object);
 
 #endif //NANOJSON_PARSE_H

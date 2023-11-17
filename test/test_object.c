@@ -40,13 +40,13 @@ static void callback(const char *const key, const char *const value, const char 
 }
 
 static void testEmptyObject() {
-    nanojson_parse_object("", callback, NULL, NULL);
+    nanojsonc_parse_object("", callback, NULL, NULL);
     assert(counter == 0);
-    nanojson_parse_object("{}", callback, NULL, NULL);
+    nanojsonc_parse_object("{}", callback, NULL, NULL);
     assert(counter == 0);
-    nanojson_parse_object(NULL, callback, "empty", NULL);
+    nanojsonc_parse_object(NULL, callback, "empty", NULL);
     assert(counter == 0);
-    nanojson_parse_object(NULL, callback, NULL, NULL);
+    nanojsonc_parse_object(NULL, callback, NULL, NULL);
     assert(counter == 0);
 }
 
@@ -58,7 +58,7 @@ static void callback1(const char *const key, const char *const value, const char
 
 static void testStringProperty() {
     char *json = "{\"first\": \"John\", \"last\": \"Doe\", \"phone\": \"\"}";
-    nanojson_parse_object(json, callback1, NULL, NULL);
+    nanojsonc_parse_object(json, callback1, NULL, NULL);
     assert(counter == 3);
     counter = 0;
 }
@@ -71,7 +71,7 @@ static void callback2(const char *const key, const char *const value, const char
 
 static void testNumberProperty() {
     char *json = "{\"first\": \"John\", \"last\": \"Doe\", \"age\": 15}";
-    nanojson_parse_object(json, callback2, NULL, NULL);
+    nanojsonc_parse_object(json, callback2, NULL, NULL);
     assert(counter == 3);
     counter = 0;
 }
@@ -85,7 +85,7 @@ static void callback3(const char *const key, const char *const value, const char
 
 static void testBooleanProperty() {
     char *json = "{\"first\": \"John\", \"last\": \"Doe\", \"isMarried\": false, \"isEmployed\": true}";
-    nanojson_parse_object(json, callback3, NULL, NULL);
+    nanojsonc_parse_object(json, callback3, NULL, NULL);
     assert(counter == 4);
     counter = 0;
 }
@@ -98,7 +98,7 @@ static void callback4(const char *const key, const char *const value, const char
 
 static void testNullValue() {
     char *json = "{\"first\": \"John\", \"last\": \"Doe\", \"phone\": null}";
-    nanojson_parse_object(json, callback4, NULL, NULL);
+    nanojsonc_parse_object(json, callback4, NULL, NULL);
     assert(counter == 3);
     counter = 0;
 }
@@ -117,7 +117,7 @@ static void callback5(const char *const key, const char *const value, const char
 
 static void testArrayProperty() {
     char *json = "{\"first\": \"John\", \"hobbies\": [\"Reading\", \"Hiking\", \"Cooking\"], \"age\": 15}";
-    nanojson_parse_object(json, callback5, NULL, NULL);
+    nanojsonc_parse_object(json, callback5, NULL, NULL);
     assert(counter == 5);
     counter = 0;
 }
@@ -143,7 +143,7 @@ static void callback6(const char *const key, const char *const value, const char
 
 static void testDeepNested() {
     char *json = "{\"foo\": \"bar\", \"level1\": {\"property1\": \"value1\", \"level2\": {\"property2\": \"value2\", \"level3\": {\"property3\": \"value3\"}}}}";
-    nanojson_parse_object(json, callback6, NULL, NULL);
+    nanojsonc_parse_object(json, callback6, NULL, NULL);
     assert(counter == 4);
     counter = 0;
 }

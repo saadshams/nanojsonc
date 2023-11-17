@@ -46,7 +46,7 @@ static void callback1(const char *const key, const char *const value, const char
 
 static void testStringArray() {
     char *json = "[\"Reading\", \"Hiking\", \"Cooking\"]";
-    nanojson_parse_array(json, callback1, "hobbies", NULL);
+    nanojsonc_parse_array(json, callback1, "hobbies", NULL);
     assert(counter == 3);
     counter = 0;
 }
@@ -63,7 +63,7 @@ static void callback2(const char *const key, const char *const value, const char
 
 static void testNumberArray() {
     char *json = "[1, 22, 333, 4444, 55555]";
-    nanojson_parse_array(json, callback2, "numbers", NULL);
+    nanojsonc_parse_array(json, callback2, "numbers", NULL);
     assert(counter == 5);
     counter = 0;
 }
@@ -73,13 +73,13 @@ static void callback3(const char *const key, const char *const value, const char
 }
 
 static void testEmptyArray() {
-    nanojson_parse_array("", callback3, "empty", NULL);
+    nanojsonc_parse_array("", callback3, "empty", NULL);
      assert(counter == 0);
-    nanojson_parse_array("[]", callback3, "empty", NULL);
+    nanojsonc_parse_array("[]", callback3, "empty", NULL);
     assert(counter == 0);
-    nanojson_parse_array(NULL, callback3, "empty", NULL);
+    nanojsonc_parse_array(NULL, callback3, "empty", NULL);
     assert(counter == 0);
-    nanojson_parse_array(NULL, callback3, NULL, NULL);
+    nanojsonc_parse_array(NULL, callback3, NULL, NULL);
     assert(counter == 0);
 }
 
@@ -91,7 +91,7 @@ static void callback4(const char *const key, const char *const value, const char
 
 static void testSingleItemArray() {
     char *json = "[2023]";
-    nanojson_parse_array(json, callback4, "single", NULL);
+    nanojsonc_parse_array(json, callback4, "single", NULL);
     assert(counter == 1);
     counter = 0;
 }
@@ -106,7 +106,7 @@ static void callback5(const char *const key, const char *const value, const char
 
 static void testBooleanArray() {
     char *json = "[true, false, true]";
-    nanojson_parse_array(json, callback5, "boolean", NULL);
+    nanojsonc_parse_array(json, callback5, "boolean", NULL);
     assert(counter == 3);
     counter = 0;
 }
@@ -121,7 +121,7 @@ static void callback6(const char *const key, const char *const value, const char
 
 static void testNullArray() {
     char *json = "[null, null, null]";
-    nanojson_parse_array(json, callback6, "Null", NULL);
+    nanojsonc_parse_array(json, callback6, "Null", NULL);
     assert(counter == 3);
     counter = 0;
 }
@@ -134,7 +134,7 @@ static void callback7(const char *const key, const char *const value, const char
 
 static void testSingleObjectArray() {
     char *json = "[{\"i\": 4 }]";
-    nanojson_parse_array(json, callback7, "single", NULL);
+    nanojsonc_parse_array(json, callback7, "single", NULL);
     assert(counter == 1);
     counter = 0;
 }
@@ -152,7 +152,7 @@ static void callback8(const char *const key, const char *const value, const char
 
 static void testMultipleObjectsArray() {
     char *json = "[{\"a\":1,\"b\":2}, {\"a\":3,\"b\":4}]";
-    nanojson_parse_array(json, callback8, "multiple", NULL);
+    nanojsonc_parse_array(json, callback8, "multiple", NULL);
     assert(counter == 4);
     counter = 0;
 }
@@ -171,7 +171,7 @@ static void callback9(const char *const key, const char *const value, const char
 
 static void testNestedArray() { // has to be parsed list, not whole values
     char *json = "[[true, false, true], [false, false]]";
-    nanojson_parse_array(json, callback9, "boolean", NULL);
+    nanojsonc_parse_array(json, callback9, "boolean", NULL);
     assert(counter == 5);
     counter = 0;
 }
@@ -191,7 +191,7 @@ static void callback10(const char *const key, const char *const value, const cha
 
 static void testMixedArray() {
     char *json = "[\"Reading\", 2020, null, true, false, {\"a\": 1, \"b\": 2}]";
-    nanojson_parse_array(json, callback10, "mixed", NULL);
+    nanojsonc_parse_array(json, callback10, "mixed", NULL);
     assert(counter == 7);
     counter = 0;
 }
@@ -208,7 +208,7 @@ static void callback11(const char *const key, const char *const value, const cha
 
 static void testNestedObject() {
     char *json = "[{\"name\": {\"first\": \"Janie\",\"last\": \"Doe\"},\"age\": 13}]";
-    nanojson_parse_array(json, callback11, "data", NULL);
+    nanojsonc_parse_array(json, callback11, "data", NULL);
     assert(counter == 3);
     counter = 0;
 }
@@ -234,7 +234,7 @@ static void callback12(const char *const key, const char *const value, const cha
 
 static void testDeepNestedArray() {
     char *json = "[\"k\", [\"r\", \"h\", \"c\"], [\"a\", \"b\", [\"x\", \"y\", \"z\", [\"j\"]]]]]";
-    nanojson_parse_array(json, callback12, "data", NULL);
+    nanojsonc_parse_array(json, callback12, "data", NULL);
     assert(counter == 10);
     counter = 0;
 }

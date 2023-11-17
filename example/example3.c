@@ -208,6 +208,7 @@ void person_free(struct Person **person) {
     (*person)->children = NULL;
 
     free(*person);
+    *person = NULL;
 }
 
 int main() {
@@ -250,7 +251,7 @@ int main() {
     fclose(file);
 
     struct Person *person = NULL;
-    nanojson_parse_object(buffer, callback, "data", &person);
+    nanojsonc_parse_object(buffer, callback, "data", &person);
     verify(person);
 
     person_free(&person);

@@ -54,7 +54,7 @@ int main(void) {
     char *json = "{\"name\": \"John Doe\", \"age\": 25}";
 
     struct Person *person = NULL;
-    nanojson_parse_object(json, callback, NULL, &person);
+    nanojsonc_parse_object(json, callback, NULL, &person);
 
     assert(strcmp(person->name, "John Doe") == 0);
     assert(person->age == 25);
