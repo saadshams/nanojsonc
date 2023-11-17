@@ -111,10 +111,10 @@ static void callback(const char *const key, const char *const value, const char 
     if (strncmp("data[children]", parentKey, strlen("data[children]")) == 0) {
         if (strcmp(key, "first") == 0) {
             struct Child *child = malloc(sizeof(struct Child));
-            // *child = (struct Child){0};
+            *child = (struct Child){0};
 
             child->name = malloc(sizeof(struct Name));
-            // *child->name = (struct Name){0};
+            *child->name = (struct Name){0};
 
             child->next = NULL;
             child->name->first = strdup(value);
@@ -125,12 +125,12 @@ static void callback(const char *const key, const char *const value, const char 
         }
         if (strcmp(key, "last") == 0) {
             struct Child **cursor;
-            for (cursor = &(*person)->children; (*cursor)->next != NULL; cursor = &(*cursor)->next);
+            for (cursor = &(*person)->children; *cursor != NULL && (*cursor)->next != NULL; cursor = &(*cursor)->next);
             (*cursor)->name->last = strdup(value);
         }
         if (strcmp(key, "age") == 0) {
             struct Child **cursor;
-            for (cursor = &(*person)->children; (*cursor)->next != NULL; cursor = &(*cursor)->next);
+            for (cursor = &(*person)->children; *cursor != NULL && (*cursor)->next != NULL; cursor = &(*cursor)->next);
             (*cursor)->age = atoi(value);
         }
     }
