@@ -29,7 +29,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "parse.h"
+#include "parser.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -74,7 +74,7 @@ static void callback3(const char *const key, const char *const value, const char
 
 static void testEmptyArray() {
     nanojsonc_parse_array("", callback3, "empty", NULL);
-     assert(counter == 0);
+    assert(counter == 0);
     nanojsonc_parse_array("[]", callback3, "empty", NULL);
     assert(counter == 0);
     nanojsonc_parse_array(NULL, callback3, "empty", NULL);

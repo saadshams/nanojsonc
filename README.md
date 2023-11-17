@@ -7,7 +7,7 @@ nanoJSONc is a C-based event-driven architecture library for JSON parsing,
 making it easy to integrate with your project's logic.
 
 Users can register callback functions to respond to specific events, such as
-key-value pairs within JSON objects or values within JSON arrays, offering a
+key-value pairs within JSON objects or indices-values within JSON arrays, offering a
 highly customizable and efficient approach to JSON parsing. nanoJSONc is ideal
 for applications where tailored event handling is crucial to processing JSON
 data effectively.
