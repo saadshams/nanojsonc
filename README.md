@@ -37,19 +37,19 @@ struct Person {
 };
 
 static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
-    struct Person **person = object;
-    if (*person == NULL) *person = malloc(sizeof(struct Person));
-    if (strcmp(key, "name") == 0) (*person)->name = strdup(value);
-    if (strcmp(key, "age") == 0) (*person)->age = atoi(value);
+    struct Person *person = object;
+    if (strcmp(key, "name") == 0) (*person).name = strdup(value);
+    if (strcmp(key, "age") == 0) (*person).age = atoi(value);
 }
 
 int main(void) {
     char *json = "{\"name\": \"John Doe\", \"age\": 25}";
     
-    struct Person *person = NULL;
+    struct Person person = (struct Person){0};
     nanojsonc_parse_object(json, callback, NULL, &person);
-    printf("Name: %s, Age: %d", person->name, person->age); // Name: John Doe, Age: 25
+    printf("Name: %s, Age: %d", person.name, person.age); // Name: John Doe, Age: 25
     
+    free(person.name);
     return 0;
 }
 ```
