@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 void nanojsonc_parse_object(const char *const json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *const parentKey, void *object) {
     if (json == NULL) return;
-    const char *start = json, *parent = (parentKey == NULL) ? "" : parentKey, *cursor = NULL;
+    const char *start = json, *cursor = NULL, *parent = (parentKey == NULL) ? "" : parentKey;
 
     for (cursor = start; *cursor != '\0' && *cursor != '{'; cursor++); // begin brace
     if (*cursor) cursor++; // proceed to key-value pairs
