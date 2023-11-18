@@ -40,7 +40,12 @@ struct Hobby {
     struct Hobby *next;
 };
 
-static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    if (error) {
+        fprintf(stderr, "Error: %s\n", error);
+        return 1;
+    }
+    
     struct Hobby **hobbies = object;
 
     struct Hobby *hobby = malloc(sizeof(struct Hobby));
@@ -51,6 +56,7 @@ static void callback(const char *const key, const char *const value, const char 
     for (cursor = hobbies; *cursor; cursor = &(*cursor)->next);
 
     *cursor = hobby;
+    return 0;
 }
 
 int main(void) {

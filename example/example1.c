@@ -40,7 +40,12 @@ struct Person {
     int age;
 };
 
-static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    if (error) {
+        fprintf(stderr, "Error: %s\n", error);
+        return 1;
+    }
+    
     struct Person **person = object;
     if (*person == NULL) {
         *person = malloc(sizeof(struct Person));
@@ -48,6 +53,7 @@ static void callback(const char *const key, const char *const value, const char 
     }
     if (strcmp(key, "name") == 0) (*person)->name = strdup(value);
     if (strcmp(key, "age") == 0) (*person)->age = atoi(value);
+    return 0;
 }
 
 int main(void) {

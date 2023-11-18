@@ -36,12 +36,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int counter = 0;
 
-static void callback1(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback1(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "hobbies") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "Reading") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "Hiking") == 0); counter++; }
         if (strcmp(key, "[2]") == 0) { assert(strcmp(value, "Cooking") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testStringArray() {
@@ -51,7 +53,8 @@ static void testStringArray() {
     counter = 0;
 }
 
-static void callback2(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback2(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "numbers") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "1") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "22") == 0); counter++; }
@@ -59,6 +62,7 @@ static void callback2(const char *const key, const char *const value, const char
         if (strcmp(key, "[3]") == 0) { assert(strcmp(value, "4444") == 0); counter++; }
         if (strcmp(key, "[4]") == 0) { assert(strcmp(value, "55555") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testNumberArray() {
@@ -68,8 +72,10 @@ static void testNumberArray() {
     counter = 0;
 }
 
-static void callback3(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback3(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     counter++;
+    return 0;
 }
 
 static void testEmptyArray() {
@@ -83,10 +89,12 @@ static void testEmptyArray() {
     assert(counter == 0);
 }
 
-static void callback4(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback4(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "single") == 0) {
         if(strcmp(key, "[0]") == 0) { assert(strcmp(value, "2023") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testSingleItemArray() {
@@ -96,12 +104,14 @@ static void testSingleItemArray() {
     counter = 0;
 }
 
-static void callback5(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback5(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "boolean") == 0) {
         if(strcmp(key, "[0]") == 0) { assert(strcmp(value, "true") == 0); counter++; }
         if(strcmp(key, "[1]") == 0) { assert(strcmp(value, "false") == 0); counter++; }
         if(strcmp(key, "[2]") == 0) { assert(strcmp(value, "true") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testBooleanArray() {
@@ -111,12 +121,14 @@ static void testBooleanArray() {
     counter = 0;
 }
 
-static void callback6(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback6(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "Null") == 0) {
         if(strcmp(key, "[0]") == 0) { assert(strcmp(value, "null") == 0); counter++; }
         if(strcmp(key, "[1]") == 0) { assert(strcmp(value, "null") == 0); counter++; }
         if(strcmp(key, "[2]") == 0) { assert(strcmp(value, "null") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testNullArray() {
@@ -126,10 +138,12 @@ static void testNullArray() {
     counter = 0;
 }
 
-static void callback7(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback7(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "single[0]") == 0) {
         if(strcmp(key, "i") == 0) { assert(strcmp(value, "4") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testSingleObjectArray() {
@@ -139,7 +153,8 @@ static void testSingleObjectArray() {
     counter = 0;
 }
 
-static void callback8(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback8(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "multiple[0]") == 0) {
         if (strcmp(key, "a") == 0) { assert(strcmp(value, "1") == 0); counter++; }
         if (strcmp(key, "b") == 0) { assert(strcmp(value, "2") == 0); counter++; }
@@ -148,6 +163,7 @@ static void callback8(const char *const key, const char *const value, const char
         if (strcmp(key, "a") == 0) { assert(strcmp(value, "3") == 0); counter++; }
         if (strcmp(key, "b") == 0) { assert(strcmp(value, "4") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testMultipleObjectsArray() {
@@ -157,7 +173,8 @@ static void testMultipleObjectsArray() {
     counter = 0;
 }
 
-static void callback9(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback9(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "boolean[0]") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "true") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "false") == 0); counter++; }
@@ -167,6 +184,7 @@ static void callback9(const char *const key, const char *const value, const char
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "false") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "false") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testNestedArray() { // has to be parsed list, not whole values
@@ -176,7 +194,8 @@ static void testNestedArray() { // has to be parsed list, not whole values
     counter = 0;
 }
 
-static void callback10(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback10(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "mixed") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "Reading") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "2020") == 0); counter++; }
@@ -187,6 +206,7 @@ static void callback10(const char *const key, const char *const value, const cha
         if (strcmp(key, "a") == 0) { assert(strcmp(value, "1") == 0); counter++; }
         if (strcmp(key, "b") == 0) { assert(strcmp(value, "2") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testMixedArray() {
@@ -196,7 +216,8 @@ static void testMixedArray() {
     counter = 0;
 }
 
-static void callback11(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback11(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "data[0][name]") == 0) {
         if (strcmp(key, "first") == 0) { assert(strcmp(value, "Janie") == 0); counter++; }
         if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
@@ -204,6 +225,7 @@ static void callback11(const char *const key, const char *const value, const cha
     if (strcmp(parentKey, "data[0]") == 0) {
         if (strcmp(key, "age") == 0) { assert(atoi(value) == 13); counter++; }
     }
+    return 0;
 }
 
 static void testNestedObject() {
@@ -213,7 +235,8 @@ static void testNestedObject() {
     counter = 0;
 }
 
-static void callback12(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback12(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "data") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "k") == 0); counter++; }
     } else if (strcmp(parentKey, "data[1]") == 0) {
@@ -230,6 +253,7 @@ static void callback12(const char *const key, const char *const value, const cha
     } else if (strcmp(parentKey, "data[2][2][3]") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "j") == 0); counter++; }
     }
+    return 0;
 }
 
 static void testDeepNestedArray() {

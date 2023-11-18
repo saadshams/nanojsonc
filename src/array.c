@@ -34,7 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <ctype.h>
 
-void nanojsonc_parse_array(const char *const json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *const parentKey, void *object) {
+void nanojsonc_parse_array(const char *const json, NanoJSONcCallback callback, const char *const parentKey, void *object) {
+    const char* error = NULL;
     if (json == NULL) return;
     const char *start = json, *cursor = NULL, *parent = parentKey == NULL ? "" : parentKey;
     int index = 0; // current index of the array
@@ -42,8 +43,8 @@ void nanojsonc_parse_array(const char *const json, void (*callback)(const char *
     for (cursor = start; *cursor != '\0' && *cursor != '['; cursor++); // begin bracket
     if (*cursor) cursor++; // proceed to values
 
-    char key[KEY_SIZE]; // array subscript
-    memset(key, 0, KEY_SIZE);
+    char key[NANOJSONC_KEY_SIZE]; // array subscript
+    memset(key, 0, NANOJSONC_KEY_SIZE);
 
     while (*cursor != '\0') {
 
@@ -59,15 +60,26 @@ void nanojsonc_parse_array(const char *const json, void (*callback)(const char *
             cursor++; // include brace
             long len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
+            char value[NANOJSONC_VALUE_SIZE];
+            memset(value, 0, NANOJSONC_VALUE_SIZE);
+            if (len >= NANOJSONC_VALUE_SIZE) {
+                error = "Value exceeds buffer size";
+                len = NANOJSONC_VALUE_SIZE - 1;
+            }
+
             strncpy(value, start, len);
             value[len] = '\0';
 
-            char subKey[KEY_SIZE];
-            memset(subKey, 0, KEY_SIZE);
-            if (snprintf(subKey, sizeof(subKey), "%s[%d]", parent, index) < 0) // parentKey with subscript
-                perror("Formatted key exceeds buffer size");
+            if (error) {
+                if (callback(error, key, value, parent, object)) return;
+                error = NULL;
+            }
+
+            char subKey[NANOJSONC_KEY_SIZE];
+            memset(subKey, 0, NANOJSONC_KEY_SIZE);
+            if (snprintf(subKey, sizeof(subKey), "%s[%d]", parent, index) < 0) { // parentKey with subscript
+                if (callback("Formatted key exceeds buffer size", key, value, parent, object)) return;
+            }
 
             nanojsonc_parse_object(value, callback, subKey, object);
             index++;
@@ -84,15 +96,26 @@ void nanojsonc_parse_array(const char *const json, void (*callback)(const char *
             cursor++; // include bracket
             long len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
+            char value[NANOJSONC_VALUE_SIZE];
+            memset(value, 0, NANOJSONC_VALUE_SIZE);
+            if (len >= NANOJSONC_VALUE_SIZE) {
+                error = "Value exceeds buffer size";
+                len = NANOJSONC_VALUE_SIZE - 1;
+            }
+
             strncpy(value, start, len);
             value[len] = '\0';
 
-            char subKey[KEY_SIZE];
-            memset(subKey, 0, KEY_SIZE);
-            if (snprintf(subKey, sizeof(subKey), "%s[%d]", parent, index) < 0) // parentKey with subscript for the recursive call
-                perror("Formatted key exceeds buffer size");
+            if (error) {
+                if(callback(error, key, value, parent, object)) return;
+                error = NULL;
+            }
+
+            char subKey[NANOJSONC_KEY_SIZE];
+            memset(subKey, 0, NANOJSONC_KEY_SIZE);
+            if (snprintf(subKey, sizeof(subKey), "%s[%d]", parent, index) < 0) { // parentKey with subscript for the recursive call
+                if(callback("Formatted key exceeds buffer size", key, value, parent, object)) return;
+            }
 
             nanojsonc_parse_array(value, callback, subKey, object);
             index++;
@@ -100,20 +123,28 @@ void nanojsonc_parse_array(const char *const json, void (*callback)(const char *
         }
 
         // parse values (string, number, boolean, null)
-        if (snprintf(key, sizeof(key), "[%d]", index) < 0)
-            perror("Formatted key exceeds buffer size");
+        if (snprintf(key, sizeof(key), "[%d]", index) < 0) {
+            if(callback("Formatted key exceeds buffer size", key, NULL, parent, object)) return;
+        }
 
         if (*cursor == '"') { // begin quote
             start = cursor + 1;
             for (cursor = start; *cursor != '\0' && *cursor != '\"'; cursor++); // end quote
             long len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
+            char value[NANOJSONC_VALUE_SIZE];
+            memset(value, 0, NANOJSONC_VALUE_SIZE);
+            if (len >= NANOJSONC_VALUE_SIZE) {
+                error = "Value exceeds buffer size";
+                len = NANOJSONC_VALUE_SIZE - 1;
+            }
+
             strncpy(value, start, len);
             value[len] = '\0';
 
-            callback(key, value, parent, object);
+            if (callback(error, key, value, parent, object)) return;
+
+            error = NULL;
             index++;
             cursor++;
         }
@@ -123,12 +154,19 @@ void nanojsonc_parse_array(const char *const json, void (*callback)(const char *
             for (; *cursor != '\0' && isdigit(*cursor); cursor++); // end digit (non-whitespace)
             long len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
+            char value[NANOJSONC_VALUE_SIZE];
+            memset(value, 0, NANOJSONC_VALUE_SIZE);
+            if (len >= NANOJSONC_VALUE_SIZE) {
+                error = "Value exceeds buffer size";
+                len = NANOJSONC_VALUE_SIZE - 1;
+            }
+
             strncpy(value, start, len);
             value[len] = '\0';
 
-            callback(key, value, parent, object);
+            if (callback(error, key, value, parent, object)) return;
+            
+            error = NULL;
             index++;
             cursor++;
         }
@@ -138,12 +176,19 @@ void nanojsonc_parse_array(const char *const json, void (*callback)(const char *
             for (; *cursor != '\0' && !isspace(*cursor) && *cursor != ',' && *cursor != ']'; cursor++);
             long len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
+            char value[NANOJSONC_VALUE_SIZE];
+            memset(value, 0, NANOJSONC_VALUE_SIZE);
+            if (len >= NANOJSONC_VALUE_SIZE) {
+                error = "Value exceeds buffer size";
+                len = NANOJSONC_VALUE_SIZE - 1;
+            }
+
             strncpy(value, start, len);
             value[len] = '\0';
 
-            callback(key, value, parent, object);
+            if(callback(error, key, value, parent, object)) return;
+
+            error = NULL;
             index++;
             cursor++;
         }

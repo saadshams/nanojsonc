@@ -63,7 +63,11 @@ struct Person {
     } *children;
 };
 
-static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static int callback(const char *const error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    if (error) {
+        fprintf(stderr, "Error: %s\n", error);
+        return 1;
+    }
     struct Person **person = object;
 
     if (*person == NULL) {
@@ -140,6 +144,8 @@ static void callback(const char *const key, const char *const value, const char 
             (*cursor)->age = atoi(value);
         }
     }
+
+    return 0;
 }
 
 void verify(struct Person *person) {
