@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <ctype.h>
 
-void nanojsonc_parse_object(const char *const json, void (*callback)(const char *const key, const char *const value, const char *const parentKey, void *object), const char *const parentKey, void *object) {
+void nanojsonc_parse_object(const char *const json, const char *const parentKey, void *object, NanoJSONCCallback callback) {
     if (json == NULL) return;
     const char *start = json, *cursor = NULL, *parent = (parentKey == NULL) ? "" : parentKey;
 
@@ -50,12 +50,15 @@ void nanojsonc_parse_object(const char *const json, void (*callback)(const char 
 
         start = cursor + 1;
         for (cursor = start; *cursor != '\0' && *cursor != '\"'; cursor++); // key: end quote
-        long length = cursor - start;
+        long len = cursor - start;
 
-        char key[KEY_SIZE];
-        memset(key, 0, KEY_SIZE);
-        strncpy(key, start, length);
-        key[length] = '\0';
+        char key[NANOJSONC_KEY_SIZE];
+        memset(key, 0, NANOJSONC_KEY_SIZE);
+        strncpy(key, start, len < NANOJSONC_KEY_SIZE ? len : NANOJSONC_KEY_SIZE - 1); // truncate large keys
+        if (len >= NANOJSONC_KEY_SIZE) {
+            callback(KEY_OVERFLOW, key, NULL, parent, object); // error
+            return;
+        }
         cursor++;
 
         // skip whitespace after the key
@@ -74,42 +77,52 @@ void nanojsonc_parse_object(const char *const json, void (*callback)(const char 
                 if (*cursor == '}') depth--;
             }
             cursor++; // include brace
+            len = cursor - start;
 
-            size_t len = cursor - start;
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
-            strncpy(value, start, len);
-            value[len] = '\0';
+            char subKey[NANOJSONC_KEY_SIZE];
+            memset(subKey, 0, NANOJSONC_KEY_SIZE);
+            if (snprintf(subKey, NANOJSONC_KEY_SIZE, "%s[%s]", parent, key) >= NANOJSONC_KEY_SIZE) { // parentKey with childKey
+                callback(JSON_KEY_OVERFLOW, subKey, NULL, parent, object);
+                return;
+            }
 
-            char subKey[KEY_SIZE];
-            memset(subKey, 0, KEY_SIZE);
-            if (snprintf(subKey, KEY_SIZE, "%s[%s]", parent, key) < 0) // parentKey with childKey
-                perror("Formatted key exceeds buffer size");
+            char value[NANOJSONC_JSON_SIZE]; // nested JSON
+            memset(value, 0, NANOJSONC_JSON_SIZE);
+            strncpy(value, start, len < NANOJSONC_JSON_SIZE ? len : NANOJSONC_JSON_SIZE - 1);
+            if (len >= NANOJSONC_JSON_SIZE) {
+                callback(JSON_VALUE_OVERFLOW, subKey, value, parent, object);
+                return;
+            }
 
-            nanojsonc_parse_object(value, callback, subKey, object);
+            nanojsonc_parse_object(value, subKey, object, callback);
         }
 
         // nested array
-        if (*cursor == '[') { // value: array
+        if (*cursor == '[') { // begin bracket
             start = cursor;
             for (int depth = 0; *cursor != '\0' && (depth > 1 || *cursor != ']'); cursor++) { // deep nested arrays
                 if (*cursor == '[') depth++;
                 if (*cursor == ']') depth--;
             }
             cursor++; // include bracket
-            long len = cursor - start;
+            len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
-            strncpy(value, start, len);
-            value[len] = '\0';
+            char subKey[NANOJSONC_KEY_SIZE];
+            memset(subKey, 0, NANOJSONC_KEY_SIZE);
+            if (snprintf(subKey, NANOJSONC_KEY_SIZE, "%s[%s]", parent, key) >= NANOJSONC_KEY_SIZE) { // parentKey with childKey
+                callback(JSON_KEY_OVERFLOW, subKey, NULL, parent, object);
+                return;
+            }
 
-            char subKey[KEY_SIZE];
-            memset(subKey, 0, KEY_SIZE);
-            if (snprintf(subKey, sizeof(subKey), "%s[%s]", parent, key) < 0) // parentKey with childKey
-                perror("Formatted key exceeds buffer size");
+            char value[NANOJSONC_JSON_SIZE];
+            memset(value, 0, NANOJSONC_JSON_SIZE);
+            strncpy(value, start, len < NANOJSONC_JSON_SIZE ? len : NANOJSONC_JSON_SIZE - 1);
+            if (len >= NANOJSONC_JSON_SIZE) {
+                callback(JSON_VALUE_OVERFLOW, subKey, value, parent, object);
+                return;
+            }
 
-            nanojsonc_parse_array(value, callback, subKey, object);
+            nanojsonc_parse_array(value, subKey, object, callback);
         }
 
         // parse values (string, number, boolean, null)
@@ -117,40 +130,37 @@ void nanojsonc_parse_object(const char *const json, void (*callback)(const char 
         if (*cursor == '"') { // value: string
             start = cursor + 1;
             for (cursor = start; *cursor != '\0' && *cursor != '\"'; cursor++); // end quote
-            long len = cursor - start;
+            len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
-            strncpy(value, start, len);
-            value[len] = '\0';
-
-            callback(key, value, parent, object);
+            char value[NANOJSONC_VALUE_SIZE];
+            memset(value, 0, NANOJSONC_VALUE_SIZE);
+            strncpy(value, start, len < NANOJSONC_VALUE_SIZE ? len : NANOJSONC_VALUE_SIZE - 1); // truncate larger values
+            callback(len >= NANOJSONC_VALUE_SIZE ? VALUE_OVERFLOW : NO_ERROR, key, value, parent, object); // error for larger values
+            if (len >= NANOJSONC_VALUE_SIZE) return;
             cursor++;
         }
 
         if (isdigit(*cursor)) { // value: number
             start = cursor;
             for (; *cursor != '\0' && isdigit(*cursor); cursor++); // end digit (non-whitespace)
-            long len = cursor - start;
+            len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, KEY_SIZE);
-            strncpy(value, start, len);
-            value[len] = '\0';
-            callback(key, value, parent, object);
+            char value[NANOJSONC_VALUE_SIZE];
+            memset(value, 0, NANOJSONC_KEY_SIZE);
+            strncpy(value, start, len < NANOJSONC_VALUE_SIZE ? len : NANOJSONC_VALUE_SIZE - 1); // truncate larger values
+            callback(len >= NANOJSONC_VALUE_SIZE ? VALUE_OVERFLOW : NO_ERROR, key, value, parent, object); // error for larger values
+            if (len >= NANOJSONC_VALUE_SIZE) return;
         }
 
         if (*cursor == 't' || *cursor == 'f' || *cursor == 'n') { // boolean (true/false) or null
             start = cursor;
             for (; *cursor != '\0' && !isspace(*cursor) && *cursor != ',' && *cursor != '}'; cursor++);
-            long len = cursor - start;
+            len = cursor - start;
 
-            char value[VALUE_SIZE];
-            memset(value, 0, VALUE_SIZE);
+            char value[NANOJSONC_VALUE_SIZE];
+            memset(value, 0, NANOJSONC_VALUE_SIZE);
             strncpy(value, start, len);
-            value[len] = '\0';
-
-            callback(key, value, parent, object);
+            callback(NO_ERROR, key, value, parent, object);
         }
 
         // skip whitespace after the value

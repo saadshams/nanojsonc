@@ -40,7 +40,9 @@ struct Hobby {
     struct Hobby *next;
 };
 
-static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static void callback(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    if (error != NO_ERROR) { printf("%s\n", nanojsonc_error_desc(error)); return; } // guard statement
+
     struct Hobby **hobbies = object;
 
     struct Hobby *hobby = malloc(sizeof(struct Hobby));
@@ -57,7 +59,7 @@ int main(void) {
     char *json = "[\"Reading\", \"Hiking\", \"Cooking\"]";
 
     struct Hobby *hobbies = NULL;
-    nanojsonc_parse_array(json, callback, "hobbies", &hobbies);
+    nanojsonc_parse_array(json, "hobbies", &hobbies, callback);
 
     for (struct Hobby **cursor = &hobbies; *cursor; cursor = &(*cursor)->next)
         printf("%s ", (*cursor)->name);
