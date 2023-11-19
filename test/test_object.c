@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 int counter = 0;
 
 static void callback(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     counter++;
 }
 
@@ -51,6 +52,7 @@ static void testEmptyObject() {
 }
 
 static void callback1(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
     if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
     if (strcmp(key, "phone") == 0) { assert(strcmp(value, "") == 0); counter++; }
@@ -64,6 +66,7 @@ static void testStringProperty() {
 }
 
 static void callback2(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
     if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
     if (strcmp(key, "age") == 0) { assert(strcmp(value, "15") == 0); counter++; }
@@ -77,6 +80,7 @@ static void testNumberProperty() {
 }
 
 static void callback3(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
     if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
     if (strcmp(key, "isMarried") == 0) { assert(strcmp(value, "false") == 0); counter++; }
@@ -91,6 +95,7 @@ static void testBooleanProperty() {
 }
 
 static void callback4(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
     if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
     if (strcmp(key, "phone") == 0) { assert(strcmp(value, "null") == 0); counter++; }
@@ -104,6 +109,7 @@ static void testNullValue() {
 }
 
 static void callback5(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "") == 0) {
         if (strcmp(key, "first") == 0) { assert(strcmp(value, "John") == 0); counter++; }
         if (strcmp(key, "age") == 0) { assert(strcmp(value, "15") == 0); counter++; }
@@ -123,6 +129,7 @@ static void testArrayProperty() {
 }
 
 static void callback6(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "") == 0) {
         if (strcmp(key, "foo") == 0) { assert(strcmp(value, "bar") == 0); counter++; }
     }

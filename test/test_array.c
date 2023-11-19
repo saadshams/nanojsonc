@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 int counter = 0;
 
 static void callback1(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "hobbies") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "Reading") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "Hiking") == 0); counter++; }
@@ -52,6 +53,7 @@ static void testStringArray() {
 }
 
 static void callback2(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "numbers") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "1") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "22") == 0); counter++; }
@@ -69,6 +71,7 @@ static void testNumberArray() {
 }
 
 static void callback3(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     counter++;
 }
 
@@ -84,6 +87,7 @@ static void testEmptyArray() {
 }
 
 static void callback4(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "single") == 0) {
         if(strcmp(key, "[0]") == 0) { assert(strcmp(value, "2023") == 0); counter++; }
     }
@@ -97,6 +101,7 @@ static void testSingleItemArray() {
 }
 
 static void callback5(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "boolean") == 0) {
         if(strcmp(key, "[0]") == 0) { assert(strcmp(value, "true") == 0); counter++; }
         if(strcmp(key, "[1]") == 0) { assert(strcmp(value, "false") == 0); counter++; }
@@ -112,6 +117,7 @@ static void testBooleanArray() {
 }
 
 static void callback6(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "Null") == 0) {
         if(strcmp(key, "[0]") == 0) { assert(strcmp(value, "null") == 0); counter++; }
         if(strcmp(key, "[1]") == 0) { assert(strcmp(value, "null") == 0); counter++; }
@@ -127,6 +133,7 @@ static void testNullArray() {
 }
 
 static void callback7(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "single[0]") == 0) {
         if(strcmp(key, "i") == 0) { assert(strcmp(value, "4") == 0); counter++; }
     }
@@ -140,6 +147,7 @@ static void testSingleObjectArray() {
 }
 
 static void callback8(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "multiple[0]") == 0) {
         if (strcmp(key, "a") == 0) { assert(strcmp(value, "1") == 0); counter++; }
         if (strcmp(key, "b") == 0) { assert(strcmp(value, "2") == 0); counter++; }
@@ -158,6 +166,7 @@ static void testMultipleObjectsArray() {
 }
 
 static void callback9(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "boolean[0]") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "true") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "false") == 0); counter++; }
@@ -177,6 +186,7 @@ static void testNestedArray() { // has to be parsed list, not whole values
 }
 
 static void callback10(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "mixed") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "Reading") == 0); counter++; }
         if (strcmp(key, "[1]") == 0) { assert(strcmp(value, "2020") == 0); counter++; }
@@ -197,6 +207,7 @@ static void testMixedArray() {
 }
 
 static void callback11(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "data[0][name]") == 0) {
         if (strcmp(key, "first") == 0) { assert(strcmp(value, "Janie") == 0); counter++; }
         if (strcmp(key, "last") == 0) { assert(strcmp(value, "Doe") == 0); counter++; }
@@ -214,6 +225,7 @@ static void testNestedObject() {
 }
 
 static void callback12(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    assert(!error);
     if (strcmp(parentKey, "data") == 0) {
         if (strcmp(key, "[0]") == 0) { assert(strcmp(value, "k") == 0); counter++; }
     } else if (strcmp(parentKey, "data[1]") == 0) {
