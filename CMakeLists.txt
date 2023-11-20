@@ -41,7 +41,6 @@ option(NANOJSONC_BUILD_TESTS "Build tests" ON) # tests
 if (NANOJSONC_BUILD_TESTS)
     enable_testing()
     include(CTest)
-    set(CTEST_OUTPUT_ON_FAILURE ON)
 
     add_subdirectory(test)
     add_subdirectory(example)
