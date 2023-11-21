@@ -36,7 +36,11 @@ struct Person {
     int age; 
 };
 
-static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static void callback(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    if (error != NO_ERROR) { 
+        printf("%s\n", nanojsonc_error_desc(error)); 
+        return; 
+    }
     struct Person *person = object;
     if (strcmp(key, "name") == 0) (*person).name = strdup(value);
     if (strcmp(key, "age") == 0) (*person).age = atoi(value);
@@ -61,7 +65,11 @@ struct Hobby {
     struct Hobby *next;
 };
 
-static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static void callback(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    if (error != NO_ERROR) { 
+        printf("%s\n", nanojsonc_error_desc(error)); 
+        return; 
+    }
     struct Hobby **hobbies = object;
     
     struct Hobby *hobby = malloc(sizeof(struct Hobby));

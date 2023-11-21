@@ -40,7 +40,9 @@ struct Person {
     int age;
 };
 
-static void callback(const char *const key, const char *const value, const char *const parentKey, void *object) {
+static void callback(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
+    if (error != NO_ERROR) { printf("%s\n", nanojsonc_error_desc(error)); return; } // guard statement
+
     struct Person **person = object;
     if (*person == NULL) {
         *person = malloc(sizeof(struct Person));
@@ -54,7 +56,7 @@ int main(void) {
     char *json = "{\"name\": \"John Doe\", \"age\": 25}";
 
     struct Person *person = NULL;
-    nanojsonc_parse_object(json, callback, NULL, &person);
+    nanojsonc_parse_object(json, NULL, &person, callback);
 
     assert(strcmp(person->name, "John Doe") == 0);
     assert(person->age == 25);
