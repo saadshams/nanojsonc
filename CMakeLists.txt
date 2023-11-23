@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 project(nanojsonc C)
 
-include(GNUInstallDirs) # Include GNUInstallDirs to set installation directories
-
 set(CMAKE_C_STANDARD 11)
 
 add_library(nanojsonc src/object.c src/array.c)
@@ -12,21 +10,21 @@ target_include_directories(nanojsonc PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
 
-# Installation rules
-install(
-        TARGETS nanojsonc
+# If you want to export the library as part of a package for VCPKG, use the following lines:
+include(GNUInstallDirs)
+install(TARGETS nanojsonc
         EXPORT nanojsoncTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# installs header
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # installs header
 
-include(CMakePackageConfigHelpers)
-configure_file(cmake/nanoJSONcConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/nanoJSONcConfig.cmake @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nanoJSONcConfig.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsonc)
+install(EXPORT nanojsoncTargets
+        FILE nanojsoncTargets.cmake
+        NAMESPACE nanojsoncTargets::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsoncTargets
+)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
@@ -35,10 +33,12 @@ endif ()
 
 if (CMAKE_COMPILER_IS_GNUCC AND NOT WIN32) # werror
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -ansi -pedantic")
 endif ()
 
-option(NANOJSONC_BUILD_TESTS "Build tests" ON) # tests
-if (NANOJSONC_BUILD_TESTS)
+option(BUILD_TESTS "Build Tests" ON) # tests
+if (BUILD_TESTS)
     enable_testing()
     include(CTest)
 
