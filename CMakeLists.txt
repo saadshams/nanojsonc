@@ -18,6 +18,16 @@ install(TARGETS nanojsonc
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
+configure_package_config_file(build/nanojsonc-config.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc
+        NO_SET_AND_CHECK_MACRO)
+
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc)
+
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # installs header
 
 install(EXPORT nanojsoncTargets
