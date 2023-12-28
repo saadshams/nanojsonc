@@ -43,7 +43,7 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
 endif ()
 
 if (CMAKE_COMPILER_IS_GNUCC AND NOT WIN32) # werror
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -ansi")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -ansi -pedantic")
 #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
 #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -ansi -pedantic")
