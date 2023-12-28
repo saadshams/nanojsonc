@@ -14,4 +14,4 @@ target_include_directories(example3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../inclu
 configure_file("example3.json" "${CMAKE_BINARY_DIR}/example/example3.json" COPYONLY)
 add_test(NAME TestExample3 COMMAND example3)
 
-add_executable(example4 example4.c)
+#add_executable(example4 example4.c)
