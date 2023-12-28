@@ -21,9 +21,9 @@ install(TARGETS nanojsonc
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # installs header
 
 install(EXPORT nanojsoncTargets
-        FILE nanojsoncTargets.cmake
-        NAMESPACE nanojsoncTargets::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsoncTargets
+        FILE nanojsoncConfig.cmake
+        NAMESPACE nanojsonc::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsonc
 )
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
