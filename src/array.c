@@ -29,11 +29,35 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/** @file array.c
+ *  To parse JSON based array
+ */
 #include "parser.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * @brief Parse a JSON array and invoke a callback for each element.
+ *
+ * This function parses a JSON array and invokes the specified callback function
+ * for each element within the array.
+ *
+ * @param json The JSON array to parse.
+ * @param parentKey The parent key (if applicable).
+ * @param object A pointer to the object being populated or processed.
+ * @param callback The callback function to be invoked for each element.
+ *
+ * The callback function should have the following signature:
+ * void callback(enum NanoJSONCError error, const char *const key,
+ *               const char *const value, const char *const parentKey,
+ *               void *object);
+ *
+ * @note The provided callback function should handle the processing or population
+ *       of the object based on the parsed JSON elements.
+ *
+ * @see nanojsonc_parse_object
+ */
 void nanojsonc_parse_array(const char *const json, const char *const parentKey, void *object, NanoJSONCCallback callback) {
     if (json == NULL) return;
     const char *start = json, *cursor = NULL, *parent = parentKey == NULL ? "" : parentKey;
