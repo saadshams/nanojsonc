@@ -44,7 +44,8 @@ endif ()
 
 if (CMAKE_COMPILER_IS_GNUCC AND NOT WIN32) # werror
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
-     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+#     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
 #     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -ansi -pedantic")
 endif ()
 
