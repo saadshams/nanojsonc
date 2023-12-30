@@ -6,36 +6,38 @@ set(CMAKE_C_STANDARD 11)
 add_library(nanojsonc src/object.c src/array.c)
 target_compile_features(nanojsonc PRIVATE c_std_11)
 
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
 target_include_directories(nanojsonc PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
 
 # If you want to export the library as part of a package for VCPKG, use the following lines:
-include(GNUInstallDirs)
 install(TARGETS nanojsonc
-        EXPORT nanojsoncTargets
+        EXPORT nanojsonc
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-include(CMakePackageConfigHelpers)
-configure_package_config_file(build/nanojsonc-config.cmake.in
+configure_package_config_file(build/config.cmake.in
         ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake
         INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc
         NO_SET_AND_CHECK_MACRO)
+
 install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake
         DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc)
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # installs header
-
-install(EXPORT nanojsoncTargets
+install(EXPORT nanojsonc
         FILE nanojsoncConfig.cmake
         NAMESPACE nanojsonc::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsonc
 )
+
+# Installs include directory (headers)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
@@ -48,7 +50,8 @@ if (CMAKE_COMPILER_IS_GNUCC AND NOT WIN32) # werror
 #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -ansi -pedantic")
 endif ()
 
-option(BUILD_TESTS "Build Tests" ON) # tests
+# Tests
+option(BUILD_TESTS "Build Tests" ON)
 if (BUILD_TESTS)
     enable_testing()
     include(CTest)
