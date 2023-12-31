@@ -13,30 +13,50 @@ target_include_directories(nanojsonc PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
 
-# If you want to export the library as part of a package for VCPKG, use the following lines:
-install(TARGETS nanojsonc
-        EXPORT nanojsonc
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+# VCPKG
+# install the target nanojsonc and create an export set nanojsonc, target sets used to import targets into other CMAKE project
+# Archive static or dynamic library will be installed to the lib folder
+# INCLUDES DESTINATION tells CMAKE, when other targets link to this target, the include directory should be added to their include directories
+# all paths are relative to CMAKE_INSTALL_PREFIX /usr/local
+# GNUInstallDirs gives you access to CMAKE_INSTALL_LIBDIR and CMAKE_INSTALL_INCLUDEDIR
+install(TARGETS nanojsonc EXPORT nanojsonc
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
 )
 
-configure_package_config_file(build/config.cmake.in
-        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake
-        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc
-        NO_SET_AND_CHECK_MACRO)
+# config.cmake is the input template configuration file for the package that is being built.
+# CMAKE_CURRENT_BINARY_DIR is the output file path to source directory/cmake-build-debug
+# the configured file will be written to at this location
+# datadir directory for read-only architecture-independent data files
+# NO_SET_AND_CHECK_MACRO instructs not to set
+configure_package_config_file(build/config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # /Users/saad/../Projects/UsageNanoJSON/cmake-build-debug
+        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # share
 
+# cmake-build/debug/nanojsonc-config.cmake and version.cmake
+# install above two files to share directory
 install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc)
+            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # /.../cmake-build-debug
+            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake # /.../cmake_build-debug
+        DESTINATION
+            ${CMAKE_INSTALL_DATADIR}/nanojsonc) # share
 
+
+# EXPORT nanojsonc, name of the export set that was created by the install(TARGETS ... EXPORT ...) command
+# FILE, name of the output file generated
+# NAMESPACE nanojsonc:: this option means that for imported targets, they will have nanojsonc added as prefix
+# it helps distinguish these imported targets from other targets in the project
+# the path where the file will be installed,
+# ???
 install(EXPORT nanojsonc
-        FILE nanojsoncConfig.cmake
+        FILE nanojsonc-config.cmake
         NAMESPACE nanojsonc::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsonc
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsonc # lib
 )
 
-# Installs include directory (headers)
+# Install headers
+# DIRECTORY installing a whole directory
+# source directory/include to destination include directory under the folder nanojsonc
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
