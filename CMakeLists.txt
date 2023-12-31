@@ -10,7 +10,6 @@ target_include_directories(nanojsonc PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
 
-
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
@@ -22,14 +21,14 @@ include(CMakePackageConfigHelpers)
 # GNUInstallDirs gives you access to CMAKE_INSTALL_LIBDIR and CMAKE_INSTALL_INCLUDEDIR
 #install(TARGETS nanojsonc
 #        EXPORT nanojsonc
-#        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
-#        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
+#        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
+#        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # x64-osx/include
 #)
 install(TARGETS nanojsonc
         EXPORT nanojsoncTargets
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
 )
+# removed INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
 
 # config.cmake is the input template configuration file for the package that is being built.
 # CMAKE_CURRENT_BINARY_DIR is the output file path to source directory/cmake-build-debug
@@ -37,16 +36,16 @@ install(TARGETS nanojsonc
 # datadir directory for read-only architecture-independent data files
 # NO_SET_AND_CHECK_MACRO instructs not to set
 configure_package_config_file(build/config.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # /Users/saad/../Projects/UsageNanoJSON/cmake-build-debug
-        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # share
+        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
+        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # x64-osx/share
 
 # cmake-build/debug/nanojsonc-config.cmake and version.cmake
 # install above two files to share directory
 #install(FILES
-#            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # /.../cmake-build-debug
-#            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake # /.../cmake_build-debug
+#            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
+#            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake # cmake_build-debug
 #        DESTINATION
-#            ${CMAKE_INSTALL_DATADIR}/nanojsonc) # share
+#            ${CMAKE_INSTALL_DATADIR}/nanojsonc) # x64-osx/share
 
 
 # EXPORT nanojsonc, name of the export set that was created by the install(TARGETS ... EXPORT ...) command
@@ -58,7 +57,7 @@ configure_package_config_file(build/config.cmake
 install(EXPORT nanojsoncTargets
         FILE nanojsoncTargets.cmake
         NAMESPACE nanojsoncTargets::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/nanojsonc # lib
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/nanojsonc # x64-osx/lib
 )
 #install(EXPORT nanojsoncTargets
 #        FILE nanojsoncTargets.cmake
@@ -69,7 +68,8 @@ install(EXPORT nanojsoncTargets
 # Install headers
 # DIRECTORY installing a whole directory
 # source directory/include to destination include directory under the folder nanojsonc
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ # root
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # x64-osx/include
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
