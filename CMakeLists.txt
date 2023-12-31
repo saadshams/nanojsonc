@@ -32,13 +32,14 @@ install(FILES # install config and version to share directory
         DESTINATION
             ${CMAKE_INSTALL_DATADIR}/nanojsonc) # share
 
+set(ConfigPackageLocation ${CMAKE_INSTALL_DATADIR}/nanojsonc)
 
 # TARGET INSTALLATION
 # install the target nanojsonc and create an export set nanojsonc, target sets used to import targets into other CMAKE project
 
-install(TARGETS nanojsonc EXPORT nanojsonc-targets) # create target set
-install(EXPORT nanojsonc-targets DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc) # export target set
-set(ConfigPackageLocation ${CMAKE_INSTALL_DATADIR}/nanojsonc)
+#install(TARGETS nanojsonc EXPORT nanojsonc-targets) # create target set
+#install(EXPORT nanojsonc-targets DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc) # export target set
+
 # NAMESPACE nanojsonc::
 
 #install(TARGETS ${PROJECT_NAME}
