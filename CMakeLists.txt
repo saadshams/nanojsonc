@@ -6,9 +6,10 @@ set(CMAKE_C_STANDARD 11)
 add_library(nanojsonc src/object.c src/array.c)
 target_compile_features(nanojsonc PRIVATE c_std_11)
 
-target_include_directories(nanojsonc PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
+#target_include_directories(nanojsonc PUBLIC
+#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#        $<INSTALL_INTERFACE:include>)
+target_include_directories(${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -16,6 +17,7 @@ include(CMakePackageConfigHelpers)
 # x1. remove includedir, configure_package_config_file
 # 2. removed include from install targets
 # 2. then target_include_directories
+# library, headers, Install targets, export targets
 
 # VCPKG
 # install the target nanojsonc and create an export set nanojsonc, target sets used to import targets into other CMAKE project
@@ -61,7 +63,7 @@ install(TARGETS nanojsonc
 install(EXPORT nanojsoncTargets
         FILE nanojsoncTargets.cmake
         NAMESPACE nanojsoncTargets::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/nanojsonc # x64-osx/lib
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc # x64-osx/lib
 )
 #install(EXPORT nanojsoncTargets
 #        FILE nanojsoncTargets.cmake
@@ -77,7 +79,8 @@ install(EXPORT nanojsoncTargets
 
 message("CMAKE_INSTALL_INCLUDEDIR")
 message(${CMAKE_INSTALL_INCLUDEDIR})
-install(FILES include/parser.h DESTINATION include/nanojsonc)
+#install(FILES include/parser.h DESTINATION include/nanojsonc)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
