@@ -60,7 +60,7 @@ configure_package_config_file(build/config.cmake
 # install above two files to share directory
 install(FILES
             ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
-            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake # cmake_build-debug
+#            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake # cmake_build-debug
         DESTINATION
             ${CMAKE_INSTALL_DATADIR}/nanojsonc) # x64-osx/share
 
