@@ -65,11 +65,11 @@ install(EXPORT nanojsoncTargets
 #        DESTINATION ${CMAKE_CURRENT_LIST_DIR}/cmake/nanojsoncTargets
 #)
 
-# Install headers
+# Install headers (skipping headers for warning)
 # DIRECTORY installing a whole directory
 # source directory/include to destination include directory under the folder nanojsonc
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ # root
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # x64-osx/include
+#install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ # root
+#        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # x64-osx/include
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
