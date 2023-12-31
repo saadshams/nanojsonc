@@ -32,10 +32,11 @@ include(CMakePackageConfigHelpers)
 #)
 install(TARGETS nanojsonc
         EXPORT nanojsoncTargets
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
 )
-#
 
 # config.cmake is the input template configuration file for the package that is being built.
 # CMAKE_CURRENT_BINARY_DIR is the output file path to source directory/cmake-build-debug
@@ -61,22 +62,19 @@ install(TARGETS nanojsonc
 # it helps distinguish these imported targets from other targets in the project
 # the path where the file will be installed,
 # changed from CMAKE_INSTALL_LIBDIR to CMAKE_INSTALL_DATADIR, added Targets suffix
-install(EXPORT nanojsoncTargets
-        FILE nanojsoncTargets.cmake
-        NAMESPACE nanojsoncTargets::
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc # x64-osx/share
-)
+#install(EXPORT nanojsoncTargets
+#        FILE nanojsoncTargets.cmake
+#        NAMESPACE nanojsoncTargets::
+#        DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc # x64-osx/share
+#)
 #install(EXPORT nanojsoncTargets
 #        FILE nanojsoncTargets.cmake
 #        NAMESPACE nanojsoncTargets::
 #        DESTINATION ${CMAKE_CURRENT_LIST_DIR}/cmake/nanojsoncTargets
 #)
 
-# Install headers (skipping headers for warning)
+# Install headers
 # DIRECTORY installing a whole directory
-# source directory/include to destination include directory under the folder nanojsonc
-message("CMAKE_INSTALL_INCLUDEDIR")
-message(${CMAKE_INSTALL_INCLUDEDIR})
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # final
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
