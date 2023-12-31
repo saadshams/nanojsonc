@@ -30,16 +30,19 @@ include(CMakePackageConfigHelpers)
 #        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
 #        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # x64-osx/include
 #)
-install(TARGETS ${PROJECT_NAME}
-        EXPORT ${PROJECT_NAME}Config
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # x64-osx/include
-)
-install(EXPORT ${PROJECT_NAME}Config
-        FILE ${PROJECT_NAME}Config.cmake
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME} # share
-)
+
+# OR
+
+#install(TARGETS ${PROJECT_NAME}
+#        EXPORT ${PROJECT_NAME}Config
+#        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
+#        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
+#        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # x64-osx/include
+#)
+#install(EXPORT ${PROJECT_NAME}Config
+#        FILE ${PROJECT_NAME}Config.cmake
+#        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME} # share
+#)
 
 # config.cmake is the input template configuration file for the package that is being built.
 # CMAKE_CURRENT_BINARY_DIR is the output file path to source directory/cmake-build-debug
