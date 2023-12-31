@@ -6,10 +6,10 @@ set(CMAKE_C_STANDARD 11)
 add_library(nanojsonc src/object.c src/array.c)
 target_compile_features(nanojsonc PRIVATE c_std_11)
 
-#target_include_directories(nanojsonc PUBLIC
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#        $<INSTALL_INTERFACE:include>)
-target_include_directories(${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+target_include_directories(nanojsonc PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>)
+#target_include_directories(${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:include>) # failing array.c, object.c
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
