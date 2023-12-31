@@ -67,6 +67,14 @@ install(FILES
         DESTINATION
             ${CMAKE_INSTALL_DATADIR}/nanojsonc) # share
 
+install(TARGETS nanojsonc EXPORT nanojsonc-targets)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # headers
+
+install(EXPORT nanojsonc-targets
+        NAMESPACE nanojsonc::
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc)
+
 # EXPORT nanojsonc, name of the export set that was created by the install(TARGETS ... EXPORT ...) command
 # FILE, name of the output file generated
 # NAMESPACE nanojsonc:: this option means that for imported targets, they will have nanojsonc added as prefix
@@ -84,7 +92,7 @@ install(FILES
 #        DESTINATION ${CMAKE_CURRENT_LIST_DIR}/cmake/nanojsoncTargets
 #)
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # headers
+
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
