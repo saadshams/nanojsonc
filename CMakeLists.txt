@@ -27,9 +27,9 @@ include(CMakePackageConfigHelpers)
 install(TARGETS nanojsonc
         EXPORT nanojsoncTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include reverting
 )
-# removed INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
-
+#
 # config.cmake is the input template configuration file for the package that is being built.
 # CMAKE_CURRENT_BINARY_DIR is the output file path to source directory/cmake-build-debug
 # the configured file will be written to at this location
