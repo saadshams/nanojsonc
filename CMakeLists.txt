@@ -8,7 +8,7 @@ target_compile_features(nanojsonc PRIVATE c_std_11)
 
 target_include_directories(nanojsonc PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 #target_include_directories(${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:include>) # failing array.c, object.c
 
 include(GNUInstallDirs)
@@ -54,15 +54,18 @@ include(CMakePackageConfigHelpers)
 
 configure_package_config_file(build/config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
-        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # x64-osx/share
+        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # share
 
-# cmake-build/debug/nanojsonc-config.cmake and version.cmake
-# install above two files to share directory
+write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake
+        VERSION 1.0.0
+        COMPATIBILITY SameMajorVersion)
+# install config and version to share directory
 install(FILES
             ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
-#            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake # cmake_build-debug
+            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake # cmake_build-debug
         DESTINATION
-            ${CMAKE_INSTALL_DATADIR}/nanojsonc) # x64-osx/share
+            ${CMAKE_INSTALL_DATADIR}/nanojsonc) # share
 
 # EXPORT nanojsonc, name of the export set that was created by the install(TARGETS ... EXPORT ...) command
 # FILE, name of the output file generated

@@ -96,6 +96,16 @@ For a complete demo of how to use nanoJSONc, please refer to the [example](https
 * [API Docs](https://github.com/saadshams/nanojsonc/blob/main/include/parse.h)
 * [Unit Tests](https://github.com/saadshams/nanojsonc/blob/main/test/test_screenshot.png)
 
+## CONSTANTS
+```cmake
+message(${CMAKE_CURRENT_SOURCE_DIR}) # source
+message(${CMAKE_CURRENT_BINARY_DIR}) # cmake-build-debug
+
+message(${CMAKE_INSTALL_INCLUDEDIR}) # include
+message(${CMAKE_INSTALL_LIBDIR}) # lib
+message(${CMAKE_INSTALL_DATADIR}) # share
+```
+
 ## Status
 
 Production - [Version 1.0.0](https://github.com/saadshams/nanojsonc/blob/master/VERSION)
