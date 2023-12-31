@@ -15,7 +15,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 # x1. remove includedir, configure_package_config_file
-# 2. removed include from install targets
+# 2. removed include from install targets, reversing as share is going into debug
 # 2. then target_include_directories
 # library, headers, Install targets, export targets
 
@@ -33,8 +33,9 @@ include(CMakePackageConfigHelpers)
 install(TARGETS nanojsonc
         EXPORT nanojsoncTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
 )
-# INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
+#
 
 # config.cmake is the input template configuration file for the package that is being built.
 # CMAKE_CURRENT_BINARY_DIR is the output file path to source directory/cmake-build-debug
@@ -63,7 +64,7 @@ install(TARGETS nanojsonc
 install(EXPORT nanojsoncTargets
         FILE nanojsoncTargets.cmake
         NAMESPACE nanojsoncTargets::
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc # x64-osx/lib
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc # x64-osx/share
 )
 #install(EXPORT nanojsoncTargets
 #        FILE nanojsoncTargets.cmake
@@ -74,13 +75,9 @@ install(EXPORT nanojsoncTargets
 # Install headers (skipping headers for warning)
 # DIRECTORY installing a whole directory
 # source directory/include to destination include directory under the folder nanojsonc
-#install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ # root
-#        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # x64-osx/include
-
 message("CMAKE_INSTALL_INCLUDEDIR")
 message(${CMAKE_INSTALL_INCLUDEDIR})
-#install(FILES include/parser.h DESTINATION include/nanojsonc)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # final
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
