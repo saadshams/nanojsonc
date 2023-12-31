@@ -71,7 +71,9 @@ install(EXPORT nanojsoncTargets
 #install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ # root
 #        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # x64-osx/include
 
-vcpkg_install_headers(include/parser.h)
+message("CMAKE_INSTALL_INCLUDEDIR")
+message(${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES include/parser.h DESTINATION include/nanojsonc)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
