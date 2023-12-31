@@ -33,7 +33,6 @@ include(CMakePackageConfigHelpers)
 
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}Config
-#        RUNTIME DESTINATION bin # ???
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # x64-osx/include
@@ -49,9 +48,9 @@ install(EXPORT ${PROJECT_NAME}Config
 # the configured file will be written to at this location
 # datadir directory for read-only architecture-independent data files
 # NO_SET_AND_CHECK_MACRO instructs not to set
-#configure_package_config_file(build/config.cmake
-#        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
-#        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # x64-osx/share
+configure_package_config_file(build/config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
+        INSTALL_DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # x64-osx/share
 
 # cmake-build/debug/nanojsonc-config.cmake and version.cmake
 # install above two files to share directory
@@ -60,7 +59,6 @@ install(EXPORT ${PROJECT_NAME}Config
 #            ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config-version.cmake # cmake_build-debug
 #        DESTINATION
 #            ${CMAKE_INSTALL_DATADIR}/nanojsonc) # x64-osx/share
-
 
 # EXPORT nanojsonc, name of the export set that was created by the install(TARGETS ... EXPORT ...) command
 # FILE, name of the output file generated
@@ -79,9 +77,7 @@ install(EXPORT ${PROJECT_NAME}Config
 #        DESTINATION ${CMAKE_CURRENT_LIST_DIR}/cmake/nanojsoncTargets
 #)
 
-# Install headers
-# DIRECTORY installing a whole directory
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # final
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nanojsonc) # headers
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32) # sanitizer
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
@@ -90,12 +86,10 @@ endif ()
 
 if (CMAKE_COMPILER_IS_GNUCC AND NOT WIN32) # werror
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -ansi")
-#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
 #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -ansi -pedantic")
 endif ()
 
-# Tests
-option(BUILD_TESTS "Build Tests" ON)
+option(BUILD_TESTS "Build Tests" ON) # Tests
 if (BUILD_TESTS)
     enable_testing()
     include(CTest)
