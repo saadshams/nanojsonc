@@ -3,7 +3,7 @@ BSD 3-Clause License
 
 Copyright (c) 2023 Open Source Patterns Inc.
 
-Redistribution and use in source and binary forms, with or without.
+Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this

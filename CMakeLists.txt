@@ -13,6 +13,9 @@ target_include_directories(nanojsonc PUBLIC
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
+# 1. remove includedir, configure_package_config_file
+# 2. then target_include_directories
+
 # VCPKG
 # install the target nanojsonc and create an export set nanojsonc, target sets used to import targets into other CMAKE project
 # Archive static or dynamic library will be installed to the lib folder
@@ -27,7 +30,7 @@ include(CMakePackageConfigHelpers)
 install(TARGETS nanojsonc
         EXPORT nanojsoncTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include reverting
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
 )
 #
 # config.cmake is the input template configuration file for the package that is being built.
@@ -35,9 +38,9 @@ install(TARGETS nanojsonc
 # the configured file will be written to at this location
 # datadir directory for read-only architecture-independent data files
 # NO_SET_AND_CHECK_MACRO instructs not to set
-configure_package_config_file(build/config.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
-        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # x64-osx/share
+#configure_package_config_file(build/config.cmake
+#        ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # cmake-build-debug
+#        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # x64-osx/share
 
 # cmake-build/debug/nanojsonc-config.cmake and version.cmake
 # install above two files to share directory
