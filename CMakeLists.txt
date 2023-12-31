@@ -30,12 +30,17 @@ include(CMakePackageConfigHelpers)
 #        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
 #        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # x64-osx/include
 #)
-install(TARGETS nanojsonc
-        EXPORT nanojsoncTargets
-        RUNTIME DESTINATION bin
+install(TARGETS ${PROJECT_NAME}
+        EXPORT ${PROJECT_NAME}Config
+        RUNTIME DESTINATION bin # ???
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # x64-osx/lib
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
+)
+
+install(EXPORT ${PROJECT_NAME}Config
+        FILE ${PROJECT_NAME}Config.cmake
+        DESTINATION share/${PROJECT_NAME}
 )
 
 # config.cmake is the input template configuration file for the package that is being built.
