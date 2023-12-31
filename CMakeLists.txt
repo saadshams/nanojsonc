@@ -39,6 +39,7 @@ install(TARGETS nanojsonc
 configure_package_config_file(build/config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/nanojsonc-config.cmake # /Users/saad/../Projects/UsageNanoJSON/cmake-build-debug
         INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/nanojsonc NO_SET_AND_CHECK_MACRO) # share
+
 # cmake-build/debug/nanojsonc-config.cmake and version.cmake
 # install above two files to share directory
 #install(FILES
@@ -53,17 +54,17 @@ configure_package_config_file(build/config.cmake
 # NAMESPACE nanojsonc:: this option means that for imported targets, they will have nanojsonc added as prefix
 # it helps distinguish these imported targets from other targets in the project
 # the path where the file will be installed,
-# ???
-#install(EXPORT nanojsonc
-#        FILE nanojsonc-config.cmake
-#        NAMESPACE nanojsonc::
-#        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsonc # lib
-#)
+# changed from CMAKE_INSTALL_LIBDIR to CMAKE_INSTALL_DATADIR, added Targets suffix
 install(EXPORT nanojsoncTargets
         FILE nanojsoncTargets.cmake
         NAMESPACE nanojsoncTargets::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nanojsoncTargets
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/nanojsonc # lib
 )
+#install(EXPORT nanojsoncTargets
+#        FILE nanojsoncTargets.cmake
+#        NAMESPACE nanojsoncTargets::
+#        DESTINATION ${CMAKE_CURRENT_LIST_DIR}/cmake/nanojsoncTargets
+#)
 
 # Install headers
 # DIRECTORY installing a whole directory
