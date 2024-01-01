@@ -21,19 +21,16 @@ data effectively.
 - Simple API, Pure Functions, No side-effects
 - Parses deeply nested & mixed JSON objects and arrays (See [examples](https://github.com/saadshams/nanojsonc/tree/main/example))
 
-## Installation
-```commandline
-vcpkg install nanojsonc
-```
-
 ## Usage
 
 ### Parsing JSON Object
 
 ```c
-struct Person { 
-    char *name; 
-    int age; 
+#include <nanojsonc/parser.h>
+
+struct Person {
+    char *name;
+    int age;
 };
 
 static void callback(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
@@ -44,11 +41,11 @@ static void callback(enum NanoJSONCError error, const char *const key, const cha
 
 int main(void) {
     char *json = "{\"name\": \"John Doe\", \"age\": 25}";
-    
+
     struct Person person = (struct Person){0};
-    nanojsonc_parse_object(json, callback, NULL, &person);
+    nanojsonc_parse_object(json, NULL, &person, callback);
     printf("Name: %s, Age: %d", person.name, person.age); // Name: John Doe, Age: 25
-    
+
     free(person.name);
     return 0;
 }
@@ -56,6 +53,8 @@ int main(void) {
 
 ### Parsing JSON Array
 ```c
+#include <nanojsonc/parser.h>
+
 struct Hobby {
     char *name;
     struct Hobby *next;
@@ -63,26 +62,26 @@ struct Hobby {
 
 static void callback(enum NanoJSONCError error, const char *const key, const char *const value, const char *const parentKey, void *object) {
     struct Hobby **hobbies = object;
-    
+
     struct Hobby *hobby = malloc(sizeof(struct Hobby));
     hobby->name = strdup(value);
     hobby->next = NULL;
 
     struct Hobby **cursor;
     for (cursor = hobbies; *cursor; cursor = &(*cursor)->next);
-    
+
     *cursor = hobby;
 }
 
 int main(void) {
     char *json = "[\"Reading\", \"Hiking\", \"Cooking\"]";
-    
+
     struct Hobby *hobbies = NULL;
-    nanojsonc_parse_array(json, callback, "hobbies", &hobbies);
+    nanojsonc_parse_array(json, "hobbies", &hobbies, callback);
 
     for (struct Hobby **cursor = &hobbies; *cursor; cursor = &(*cursor)->next)
-        printf("%s ", (*cursor)->name); // Reading Hiking Cooking 
-    
+        printf("%s ", (*cursor)->name); // Reading Hiking Cooking
+
     return 0;
 }
 ```
@@ -91,26 +90,38 @@ int main(void) {
 
 ## Examples
 
-For a complete demo of how to use nanoJSONc, please refer to the [example](https://github.com/saadshams/nanojsonc/tree/main/example) directory.
+For a complete demo of how to use nanoJSONc, please refer to the folloowing 
 
+* [Examples](https://github.com/saadshams/nanojsonc/tree/main/example)
 * [API Docs](https://github.com/saadshams/nanojsonc/blob/main/include/parse.h)
-* [Unit Tests](https://github.com/saadshams/nanojsonc/blob/main/test/test_screenshot.png)
 
 ## Installation
 
-[vcpkg in CMake projects](https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/cmake-integration)
-CMake Options
-
-CMake versions older than 3.19 must pass the toolchain file on the configure command line
+### Integrate with CMake
+CMake versions older than 3.19 must pass the toolchain file on the configure command line [vcpkg in CMake projects](https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/cmake-integration) 
 ```
 -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>/scripts/buildsystems/vcpkg.cmake
 ```
 
-**CMakeLists.txt**
+### Install the Library:
+
+```commandline
+vcpkg install nanojsonc
+```
+
+### CMakeLists.txt
 ```cmake
 find_package(nanojsonc CONFIG REQUIRED)
 target_link_libraries(main PRIVATE nanojsonc::nanojsonc)
+
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
+endif ()
 ```
+
+If you receive malloc: nano zone, set environment variable `MallocNanoZone=0`
+
 ## CONSTANTS
 ```cmake
 message(${CMAKE_CURRENT_SOURCE_DIR}) # source

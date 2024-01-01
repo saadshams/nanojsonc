@@ -72,3 +72,4 @@ cmake-build-debug
 .vscode
 .history/
 *.vslx
+.DS_Store
