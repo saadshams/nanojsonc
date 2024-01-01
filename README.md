@@ -96,6 +96,21 @@ For a complete demo of how to use nanoJSONc, please refer to the [example](https
 * [API Docs](https://github.com/saadshams/nanojsonc/blob/main/include/parse.h)
 * [Unit Tests](https://github.com/saadshams/nanojsonc/blob/main/test/test_screenshot.png)
 
+## Installation
+
+[vcpkg in CMake projects](https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/cmake-integration)
+CMake Options
+
+CMake versions older than 3.19 must pass the toolchain file on the configure command line
+```
+-DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>/scripts/buildsystems/vcpkg.cmake
+```
+
+**CMakeLists.txt**
+```cmake
+find_package(nanojsonc CONFIG REQUIRED)
+target_link_libraries(main PRIVATE nanojsonc::nanojsonc)
+```
 ## CONSTANTS
 ```cmake
 message(${CMAKE_CURRENT_SOURCE_DIR}) # source
