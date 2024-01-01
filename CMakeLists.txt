@@ -11,25 +11,25 @@ target_include_directories(nanojsonc PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 include(GNUInstallDirs)
-#include(CMakePackageConfigHelpers)
+include(CMakePackageConfigHelpers)
 
-## Config
-#configure_package_config_file(build/config.cmake
-#        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake # cmake-build-debug/
-#        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME} NO_SET_AND_CHECK_MACRO) # share/
-#
-## Version
-#write_basic_package_version_file(
-#        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-#        VERSION 1.0.0
-#        COMPATIBILITY SameMajorVersion)
-#
-## Install Config & Version
-#install(FILES
-#            ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake # cmake-build-debug/
-#            ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake # cmake_build-debug/
-#        DESTINATION
-#            ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}) # share/
+# Config
+configure_package_config_file(build/config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake # cmake-build-debug/
+        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME} NO_SET_AND_CHECK_MACRO) # share/
+
+# Version
+write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+        VERSION 1.0.0
+        COMPATIBILITY SameMajorVersion)
+
+# Install Config & Version
+install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake # cmake-build-debug/
+            ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake # cmake_build-debug/
+        DESTINATION
+            ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}) # share/
 
 # Create export set to enable import in other CMake Projects
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets # create export set
