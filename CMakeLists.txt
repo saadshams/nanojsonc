@@ -39,6 +39,7 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets # create export s
 )
 # Install Export Set
 install(EXPORT ${PROJECT_NAME}-targets
+        FILE nanojsonc-config.cmake
         NAMESPACE nanojsonc::
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME})
 
