@@ -38,9 +38,7 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets # create export s
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include/
 )
 # Install Export Set
-install(EXPORT ${PROJECT_NAME}-targets
-        NAMESPACE nanojsonc::
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME})
+install(EXPORT ${PROJECT_NAME}-targets DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME})
 
 # Install Headers
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}) # include/
