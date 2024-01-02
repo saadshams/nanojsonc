@@ -122,7 +122,12 @@ endif ()
 
 If you receive malloc: nano zone, set environment variable `MallocNanoZone=0`
 
-## CONSTANTS
+## Reference
+
+[It's Time To Do CMake Right
+](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/)
+
+### CONSTANTS
 ```cmake
 message(${CMAKE_CURRENT_SOURCE_DIR}) # source
 message(${CMAKE_CURRENT_BINARY_DIR}) # cmake-build-debug
