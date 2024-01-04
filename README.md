@@ -21,7 +21,31 @@ data effectively.
 - Simple API, Pure Functions, No side-effects
 - Parses deeply nested & mixed JSON objects and arrays (See [examples](https://github.com/saadshams/nanojsonc/tree/main/example))
 
+## Installation
+
+```commandline
+vcpkg install nanojsonc
+```
+
 ## Usage
+
+CMake versions older than 3.19 must pass the toolchain file on the configure command line [vcpkg in CMake projects](https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/cmake-integration)
+```
+-DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>/scripts/buildsystems/vcpkg.cmake
+```
+
+### CMakeLists.txt
+```cmake
+find_package(nanojsonc CONFIG REQUIRED)
+target_link_libraries(main PRIVATE nanojsonc::nanojsonc)
+
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
+endif ()
+```
+
+If you receive malloc: nano zone, set environment variable `MallocNanoZone=0`
 
 ### Parsing JSON Object
 
@@ -86,6 +110,21 @@ int main(void) {
 }
 ```
 
+### Option: Use Library directly without VCPKG
+
+Override `find_package`
+```cmake
+set(as_subprojectFoo nanojsonc)
+
+macro(find_package)
+    if(NOT "${ARG0}" IN_LIST as_subprojectFoo)
+        _find_package(${ARGV})
+    else()
+        add_subdirectory(${ARG0})
+    endif()
+endmacro()
+```
+
 [//]: # (gcc -g demo.c src/*.c -Iinclude/ -g -D NANOJSONC_KEY_SIZE=4)
 
 ## Examples
@@ -95,39 +134,12 @@ For a complete demo of how to use nanoJSONc, please refer to the folloowing
 * [Examples](https://github.com/saadshams/nanojsonc/tree/main/example)
 * [API Docs](https://github.com/saadshams/nanojsonc/blob/main/include/parse.h)
 
-## Installation
-
-### Integrate with CMake
-CMake versions older than 3.19 must pass the toolchain file on the configure command line [vcpkg in CMake projects](https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/cmake-integration) 
-```
--DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>/scripts/buildsystems/vcpkg.cmake
-```
-
-### Install the Library:
-
-```commandline
-vcpkg install nanojsonc
-```
-
-### CMakeLists.txt
-```cmake
-find_package(nanojsonc CONFIG REQUIRED)
-target_link_libraries(main PRIVATE nanojsonc::nanojsonc)
-
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
-endif ()
-```
-
-If you receive malloc: nano zone, set environment variable `MallocNanoZone=0`
 
 ## Reference
+* [Effective CMake](https://www.youtube.com/watch?v=rLopVhns4Zs)
+* [It's Time To Do CMake Right](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right)
 
-[It's Time To Do CMake Right
-](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/)
-
-### CONSTANTS
+#### CONSTANTS
 ```cmake
 message(${CMAKE_CURRENT_SOURCE_DIR}) # source
 message(${CMAKE_CURRENT_BINARY_DIR}) # cmake-build-debug
