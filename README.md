@@ -29,7 +29,7 @@ vcpkg install nanojsonc
 
 ## Usage
 
-CMake versions older than 3.19 must pass the toolchain file on the configure command line [vcpkg in CMake projects](https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/cmake-integration)
+Configure CMake Options: [vcpkg in CMake projects](https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/cmake-integration)
 ```
 -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>/scripts/buildsystems/vcpkg.cmake
 ```
@@ -110,7 +110,7 @@ int main(void) {
 }
 ```
 
-### Option: Use Library directly without VCPKG
+### Option: Use library without VCPKG
 
 Override `find_package`
 ```cmake
