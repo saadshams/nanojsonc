@@ -132,7 +132,7 @@ endmacro()
 For a complete demo of how to use nanoJSONc, please refer to the folloowing 
 
 * [Examples](https://github.com/saadshams/nanojsonc/tree/main/example)
-* [API Docs](https://github.com/saadshams/nanojsonc/blob/main/include/parse.h)
+* [API Docs](https://github.com/saadshams/nanojsonc/blob/main/include/parser.h)
 
 
 ## Reference
