@@ -48,24 +48,25 @@ install(EXPORT ${PROJECT_NAME}-targets
 # Install Headers
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}) # include/
 
-# Enable AddressSanitizer for Debug builds
-if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT WIN32) # sanitizer
-    message(STATUS "Applying AddressSanitizer for Debug build")
-#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
-#    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
-    target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address,undefined -fno-sanitize-recover=all)
-    target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address,undefined)
-endif ()
-
-if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCC AND NOT WIN32) # werror
-#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -ansi")
-    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -ansi -pedantic")
-    # target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -ansi)
-    # target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -ansi -pedantic)
-endif ()
-
 option(BUILD_TESTS "Build Tests" ON) # Tests
 if (BUILD_TESTS)
+
+    # Enable AddressSanitizer for Debug builds
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT WIN32) # sanitizer
+        message(STATUS "Applying AddressSanitizer for Debug build")
+        #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
+        #    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
+        target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address,undefined -fno-sanitize-recover=all)
+        target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address,undefined)
+    endif ()
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCC AND NOT WIN32) # werror
+        #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -ansi")
+        # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -ansi -pedantic")
+        # target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -ansi)
+        # target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -ansi -pedantic)
+    endif ()
+
     enable_testing()
     include(CTest)
 
