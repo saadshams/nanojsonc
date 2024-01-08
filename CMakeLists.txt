@@ -35,15 +35,16 @@ install(FILES
 
 # Create export set to enable import in other CMake Projects
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets # create export set
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib/
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib/
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include/
+        INCLUDES DESTINATION include
 )
 # Install Export Set
 install(EXPORT ${PROJECT_NAME}-targets
+        FILE ${PROJECT_NAME}-targets.cmake
         NAMESPACE nanojsonc::
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME})
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}) # lib/cmake/nanojsonc
 
 # Install Headers
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}) # include/
@@ -53,7 +54,6 @@ if (BUILD_TESTS)
 
     # Enable AddressSanitizer for Debug builds
     if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT WIN32) # sanitizer
-        message(STATUS "Applying AddressSanitizer for Debug build")
         #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
         #    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
         target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address,undefined -fno-sanitize-recover=all)
@@ -61,9 +61,9 @@ if (BUILD_TESTS)
     endif ()
 
     if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCC AND NOT WIN32) # werror
-        #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -ansi")
+#        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -ansi")
         # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -ansi -pedantic")
-        # target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -ansi)
+         target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -ansi)
         # target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -ansi -pedantic)
     endif ()
 
