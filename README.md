@@ -38,11 +38,6 @@ Configure CMake Options: [vcpkg in CMake projects](https://learn.microsoft.com/e
 ```cmake
 find_package(nanojsonc CONFIG REQUIRED)
 target_link_libraries(main PRIVATE nanojsonc::nanojsonc)
-
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.1 AND NOT WIN32)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address,undefined -fno-sanitize-recover=all")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
-endif ()
 ```
 
 If you receive malloc: nano zone, set environment variable `MallocNanoZone=0`
